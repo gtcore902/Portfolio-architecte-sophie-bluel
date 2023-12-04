@@ -129,10 +129,10 @@ li:hover {
 	display: flex;
 	justify-content: center;
 	align-items: center;
-	font-family: 'Syne';
 	margin: 51px auto;
 }
 .filter-btn {
+	font-family: 'Syne';
 	box-sizing: border-box;
 	display: flex;
 	justify-content: center;
@@ -143,6 +143,7 @@ li:hover {
 	border-radius: 60px;
 	font-weight: 700;
 	color: #1D6154;
+	background-color: transparent;
 	min-width: 100px;
 	height: 37px;
 	cursor: pointer;

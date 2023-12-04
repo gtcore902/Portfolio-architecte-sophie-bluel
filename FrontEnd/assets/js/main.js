@@ -1,5 +1,6 @@
 // Variables
 let gallery = document.querySelector('.gallery')
+let objectFilterBtn = document.getElementById('objects')
 
 // Creat figure element
 function createFigureElement(src, title) {
@@ -13,14 +14,23 @@ function createFigureElement(src, title) {
     gallery.appendChild(figureElement)
 }
 
-// Fetch data from swagger API
+// Fetch datas from swagger API
 async function getDatas() {
     const response = await fetch('http://localhost:5678/api/works')
-    const data = await response.json()
-    for (let i = 0; i < data.length; i++) {
-        createFigureElement(data[i].imageUrl, data[i].title)
+    const datas = await response.json()
+    for (let i = 0; i < datas.length; i++) {
+        createFigureElement(datas[i].imageUrl, datas[i].title)
     }
-}
+    objectFilterBtn.addEventListener('click', function(event) {
+        // console.log(event.target)
+        const dataObjects = datas.filter(function(data) {
+            gallery.innerHTML = ""
+            return data.categoryId === 2
+    })
+    for (let i = 0; i < dataObjects.length; i++) {
+        createFigureElement(dataObjects[i].imageUrl, dataObjects[i].title)
+    }
+})}
 
 try {
     getDatas()
