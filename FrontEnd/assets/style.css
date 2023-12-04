@@ -224,8 +224,7 @@ footer nav ul {
 	flex-direction: column;
 }
 .login-container .login-title {
-	margin: 150px auto 7px auto;
-	text-align: center;
+	margin: 50px auto 7px auto;
 }
 .login-container .login-form {
 	display: flex;
@@ -237,7 +236,7 @@ footer nav ul {
 	font-weight: 500;
 	margin: 30px 0 7px 0;
 }
-.login-form input[type="mail"], .login-form input[type="password"] {
+.login-form input[type="email"], .login-form input[type="password"] {
 	width: 379px;
 	height: 51px;
 	background-color: white;
@@ -261,8 +260,9 @@ footer nav ul {
 }
 .login-footer {
 	position: absolute;
-	width: 100%;
 	bottom: 0;
 	right: 0;
+	z-index: 1;
+	width: 100%;
 	background-color: white;
 }
