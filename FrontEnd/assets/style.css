@@ -148,6 +148,10 @@ li:hover {
 	height: 37px;
 	cursor: pointer;
 }
+.filter-btn:first-of-type {
+	color: white;
+	background-color: #1D6154;
+}
 .gallery {
 	width: 100%;
 	display: grid;
