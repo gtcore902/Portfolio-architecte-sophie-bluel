@@ -261,8 +261,8 @@ footer nav ul {
 .login-footer {
 	position: absolute;
 	bottom: 0;
-	right: 0;
 	z-index: 1;
 	width: 100%;
+	max-width: 1140px;
 	background-color: white;
 }
