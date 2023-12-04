@@ -14,28 +14,39 @@ function createFigureElement(src, title) {
     gallery.appendChild(figureElement)
 }
 
-// Fetch datas from swagger API
+// Fetch datas from swagger API or localStorage
 let datas
+let localStorage = window.localStorage.getItem('datas')
+
 async function getDatas() {
-    const response = await fetch('http://localhost:5678/api/works')
-    // Handle error
-    try {
-        if (response.status === 404) {
-            throw new Error('404, Page not found')
-        }
-        if (response.status === 500) {
-            throw new Error('500, Internal servor error')
-        }
-        datas = await response.json()
+    // Check if localStorage datas
+    if (localStorage) {
+        datas = window.localStorage.getItem('datas')
+        datas = JSON.parse(datas)
         for (let i = 0; i < datas.length; i++) {
             createFigureElement(datas[i].imageUrl, datas[i].title)
         }
-    } catch (error) {
-        console.error(error)
+    } else {
+        const response = await fetch('http://localhost:5678/api/works')
+        // Handle error
+        try {
+            if (response.status === 404) {
+                throw new Error('404, Page not found')
+            }
+            if (response.status === 500) {
+                throw new Error('500, Internal servor error')
+            }
+            datas = await response.json()
+            for (let i = 0; i < datas.length; i++) {
+                createFigureElement(datas[i].imageUrl, datas[i].title)
+            }
+            // Set localStorage
+            window.localStorage.setItem('datas', JSON.stringify(datas))
+        } catch (error) {
+            console.error(error)
+        }
     }
 }
-
-// Launch fetch system
 getDatas()
 
 // Set filter system
