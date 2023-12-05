@@ -35,8 +35,8 @@ function editionModeButton() {
     let titleProjects = document.querySelector('.title-projects')
     titleProjects.style.marginBottom = "51px"
     // console.log(titleProjects)
-    let spanModifier = document.createElement('span')
-    spanModifier.classList.add('span-modifier')
+    let spanModifier = document.createElement('a')
+    spanModifier.classList.add('link-modifier')
     spanModifier.innerHTML = `
        <i class="fa-regular fa-pen-to-square"></i>
         <span class="span-edition">Modifier</span>
