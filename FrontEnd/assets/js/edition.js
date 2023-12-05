@@ -44,11 +44,12 @@ function editionModeButton() {
     titleProjects.appendChild(spanModifier)
 }
 
-// Set modale system
+// Set  modale system
 function openModal() {
-    let editionSpan = document.querySelector('.span-modifier')
+    let editionSpan = document.querySelector('.link-modifier')
     editionSpan.addEventListener('click', () => {
-        // console.log('ok')
+        let modale = document.querySelector('.modale')
+        console.log(modale)
     })
 }
 
