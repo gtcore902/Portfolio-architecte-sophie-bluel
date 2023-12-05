@@ -17,6 +17,10 @@ function validatePassword(userPassword) {
     return userPassword !== ""
 }
 
+async function redirection (token) {
+    window.sessionStorage.setItem('token',token)
+}
+
 // Sending datas function
 async function sendingDatas(datas) {
     try {
@@ -31,9 +35,8 @@ async function sendingDatas(datas) {
         errorMessageContainer.innerText = errorMessage
         throw new Error("Erreur de traitement fetch")
     } else {
-        window.localStorage.setItem('token', result.token)
-        console.log(result.status)
-        console.log('Token:' + result.token)
+        redirection(result.token)
+            .then(window.location.href = "./index.html")
     }
     } catch (error) {
         console.error( error)

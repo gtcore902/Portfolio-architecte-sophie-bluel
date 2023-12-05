@@ -11,13 +11,13 @@
 	<link rel="stylesheet" href="./assets/style.css">
 </head>
 <body>
-<header>
+<header class="main-header">
 	<h1>Sophie Bluel <span>Architecte d'intérieur</span></h1>
 	<nav>
 		<ul>
 			<li><a href="#portfolio">projets</a></li>
 			<li><a href="#contact">contact</a></li>
-			<li><a href="./login.html">login</a></li>
+			<li><a class="login-href" href="./login.html">login</a></li>
 			<li><img src="./assets/icons/instagram.png" alt="Instagram"></li>
 		</ul>
 	</nav>
@@ -35,7 +35,7 @@
 		</article>
 	</section>
 	<section id="portfolio">
-		<h2>Mes Projets</h2>
+		<h2 class="title-projects">Mes Projets</h2>
 		<div class="filters">
 			<button data-id="123" class="filter-btn">Tous</button>
 			<button data-id="1" class="filter-btn">Objects</button>
@@ -68,5 +68,14 @@
 	</nav>
 </footer>
 <script src="./assets/js/main.js" defer></script>
+<script src="./assets/js/edition.js" defer></script>
+<!-- Font Awesome -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/js/all.min.js" 
+	integrity="sha512-GWzVrcGlo0TxTRvz9ttioyYJ+Wwk9Ck0G81D+eO63BaqHaJ3YZX9wuqjwgfcV/MrB2PhaVX9DkYVhbFpStnqpQ==" 
+	crossorigin="anonymous" 
+	referrerpolicy="no-referrer">
+	defer
+</script>
+
 </body>
 </html>

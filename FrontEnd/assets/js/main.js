@@ -14,14 +14,14 @@ function createFigureElement(src, title) {
     gallery.appendChild(figureElement)
 }
 
-// Fetch datas from swagger API or localStorage
+// Fetch datas from swagger API or sessionStorage
 let datas
-let localStorage = window.localStorage.getItem('datas')
+let sessionStorage = window.sessionStorage.getItem('datas')
 
 async function getDatas() {
-    // Check if localStorage datas
-    if (localStorage) {
-        datas = window.localStorage.getItem('datas')
+    // Check if sessionStorage datas
+    if (sessionStorage) {
+        datas = window.sessionStorage.getItem('datas')
         datas = JSON.parse(datas)
         for (let i = 0; i < datas.length; i++) {
             createFigureElement(datas[i].imageUrl, datas[i].title)
@@ -40,8 +40,8 @@ async function getDatas() {
             for (let i = 0; i < datas.length; i++) {
                 createFigureElement(datas[i].imageUrl, datas[i].title)
             }
-            // Set localStorage
-            window.localStorage.setItem('datas', JSON.stringify(datas))
+            // Set sessionStorage
+            window.sessionStorage.setItem('datas', JSON.stringify(datas))
         } catch (error) {
             console.error(error)
         }
