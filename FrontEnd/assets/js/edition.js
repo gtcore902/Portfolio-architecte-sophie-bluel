@@ -44,14 +44,26 @@ function editionModeButton() {
     titleProjects.appendChild(spanModifier)
 }
 
-// Set  modale system
+// Set modale system
+let modaleContainer = document.querySelector('.modale-container')
+
 function openModal() {
     let editionSpan = document.querySelector('.link-modifier')
     editionSpan.addEventListener('click', () => {
-        let modale = document.querySelector('.modale')
-        console.log(modale)
+        modaleContainer.style.display = 'flex'
+    })
+    // code gallery content here
+}
+
+function closeModale() {
+    let closeModaleBtn = document.querySelector('.closeModal')
+    closeModaleBtn.addEventListener('click', () => {
+        modaleContainer.style.display = 'none'
     })
 }
+
+// function gallery content
+
 
 // Check if token exists in local storage
 if (window.sessionStorage.getItem('token')) {
@@ -59,4 +71,5 @@ if (window.sessionStorage.getItem('token')) {
     setHrefButton()
     editionModeButton()
     openModal()
+    closeModale()
 }
