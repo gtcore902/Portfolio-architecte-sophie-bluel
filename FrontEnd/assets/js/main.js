@@ -2,8 +2,12 @@
 let gallery = document.querySelector('.gallery')
 let objectFilterBtn = document.querySelectorAll('.filter-btn')
 
-// Creat figure element
-function createFigureElement(src, title) {
+// Fetch datas from swagger API or sessionStorage
+let datas
+let sessionStorage = window.sessionStorage.getItem('datas')
+
+// Create figure element
+async function createFigureElement(src, title) {
     const figureElement = document.createElement('figure')
     const imgElement = document.createElement('img')
     imgElement.src = src
@@ -14,18 +18,20 @@ function createFigureElement(src, title) {
     gallery.appendChild(figureElement)
 }
 
-// Fetch datas from swagger API or sessionStorage
-let datas
-let sessionStorage = window.sessionStorage.getItem('datas')
+// Display gallery
+async function displayGallery(datas) {
+    console.log(datas)
+    for (let i = 0; i < datas.length; i++) {
+        createFigureElement(datas[i].imageUrl, datas[i].title)
+    }
+}
 
-async function getDatas() {
-    // Check if sessionStorage datas
+// Main function to get datas from API or sessionStorage
+export async function getDatas() {
+    // Check if sessionStorage datas exists
     if (sessionStorage) {
         datas = window.sessionStorage.getItem('datas')
         datas = JSON.parse(datas)
-        for (let i = 0; i < datas.length; i++) {
-            createFigureElement(datas[i].imageUrl, datas[i].title)
-        }
     } else {
         const response = await fetch('http://localhost:5678/api/works')
         // Handle error
@@ -37,17 +43,22 @@ async function getDatas() {
                 throw new Error('500, Internal servor error')
             }
             datas = await response.json()
-            for (let i = 0; i < datas.length; i++) {
-                createFigureElement(datas[i].imageUrl, datas[i].title)
-            }
             // Set sessionStorage
             window.sessionStorage.setItem('datas', JSON.stringify(datas))
         } catch (error) {
             console.error(error)
         }
     }
+    return datas
 }
-getDatas()
+
+// Load and display data
+async function launchSystem() {
+    await getDatas()
+    await displayGallery(datas)
+}
+
+launchSystem()
 
 // Set filter system
 for (const element of objectFilterBtn) {

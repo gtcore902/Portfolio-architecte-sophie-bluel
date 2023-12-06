@@ -343,6 +343,19 @@ footer nav ul {
 	font-family: 'Work Sans' ;
 	color: black;
 	font-size: 26px;
+	font-weight: 400;
+	margin-bottom: 46px;
+}
+.gallery-modale {
+	display: grid;
+	grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+	grid-template-rows: 1fr 1fr 1fr;
+	column-gap: 9px;
+	row-gap: 30px;
+}
+.edition-gallery-img {
+	width: 100%;
+	max-width: 78px;
 }
 .separator {
 	width: 100%;

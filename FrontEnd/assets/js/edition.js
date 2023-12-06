@@ -1,3 +1,5 @@
+import { getDatas } from './main.js';
+
 // Create edition bar
 function createEditionBar() {
     let editionModeBar = document.createElement('div');
@@ -47,12 +49,15 @@ function editionModeButton() {
 // Set modale system
 let modaleContainer = document.querySelector('.modale-container')
 
-function openModal() {
+async function openModal() {
     let editionSpan = document.querySelector('.link-modifier')
+    const datas = await getDatas()
     editionSpan.addEventListener('click', () => {
+        console.log(datas)
         modaleContainer.style.display = 'flex'
+        // code gallery
+        editGalleryContent(datas)
     })
-    // code gallery content here
 }
 
 function closeModale() {
@@ -63,6 +68,18 @@ function closeModale() {
 }
 
 // function gallery content
+function editGalleryContent(datas) {
+    let editionGalleryContent = document.querySelector('.gallery-modale')
+    for (let i = 0; i < datas.length; i++) {
+        let imgTag = document.createElement('img')
+        imgTag.src = datas[i].imageUrl
+        // add dataset
+        imgTag.classList.add('edition-gallery-img')
+        editionGalleryContent.appendChild(imgTag)
+        console.log(imgTag)
+        
+    }
+}
 
 
 // Check if token exists in local storage
