@@ -6,7 +6,11 @@ let objectFilterBtn = document.querySelectorAll('.filter-btn')
 let datas
 let sessionStorage = window.sessionStorage.getItem('datas')
 
-// Create figure element
+/**
+ * Create figure element
+ * @param {*} src 
+ * @param {*} title 
+ */
 async function createFigureElement(src, title) {
     const figureElement = document.createElement('figure')
     const imgElement = document.createElement('img')
@@ -18,7 +22,10 @@ async function createFigureElement(src, title) {
     gallery.appendChild(figureElement)
 }
 
-// Display gallery
+/**
+ * Display gallery
+ * @param {object} datas 
+ */
 async function displayGallery(datas) {
     console.log(datas)
     for (let i = 0; i < datas.length; i++) {
