@@ -49,6 +49,7 @@ function editionModeButton() {
 // Set modale system
 let modaleContainer = document.querySelector('.modale-container')
 let modaleContent = document.querySelector('.modale-content')
+let closeModaleBtns = document.querySelector('.close-modale-btn')
 let editionGalleryContent = document.querySelector('.gallery-modale')
 
 
@@ -58,6 +59,8 @@ async function openModal() {
     editionSpan.addEventListener('click', () => {
         console.log(datas)
         modaleContainer.style.display = 'flex'
+        editionGalleryContent.innerHTML = ""
+
         // code gallery content
         generateGalleryContent(datas)
     })
@@ -70,9 +73,16 @@ async function openModal() {
 function resetModale() {
     modaleContainer.style.display = 'none'
     editionGalleryContent.innerHTML = ""
+    editionGalleryContent.classList.add('gallery-modale')
+    if (returnBtn) {
+        document.getElementById('return-btn').remove()
+    } 
 }
 
 function closeModale() {
+    if (returnBtn) {
+        document.getElementById('return-btn').remove()
+    } 
     modaleContainer.addEventListener('click', () => resetModale())
     let closeModaleBtn = document.querySelector('.closeModal')
     closeModaleBtn.addEventListener('click', () => resetModale())
@@ -121,28 +131,94 @@ function deleteWork(workId) {
 
 // // Function to add works
 // Create form to add work
+function createInputFile(container) {
+    // Create input type file
+    let inputFile = document.createElement('input')
+    inputFile.type = 'file'
+    inputFile.id = "file"
+    inputFile.style.display = 'none'
+    // Create label for file
+    let inputFileLabel = document.createElement('label')
+    inputFileLabel.classList.add('input-file')
+    inputFileLabel.textContent = "+ Ajouter photo"
+    inputFileLabel.setAttribute('for', 'file')
+    // add elements to DOM
+    container.appendChild(inputFileLabel)
+    container.appendChild(inputFile)
+}
+
+function createInputText(container) {
+    // Create input type text
+    let inputTitle = document.createElement('input')
+    inputTitle.type = 'text'
+    inputTitle.classList.add('input')
+    // Create label for input text
+    let inputTitleLabel = document.createElement('label')
+    inputTitleLabel.textContent = "Titre"
+    // add elements to DOM
+    container.appendChild(inputTitleLabel)
+    container.appendChild(inputTitle)
+}
+
+function createSelectElement(container) {
+    // Create select element
+    let selectElement = document.createElement('select')
+    selectElement.classList.add('input')
+    let selectLabel = document.createElement('label')
+    selectLabel.id = 'select-category'
+    selectLabel.textContent = 'Catégorie'
+    container.appendChild(selectLabel)
+    container.appendChild(selectElement)
+    // set options from datas
+
+}
+
 let form
 function createFormAddWord() {
     form = document.createElement('form')
     let inputFileContainer = document.createElement('div')
-    let inputFileLabel = document.createElement('label')
-    let inputFile = document.createElement('input')
-    inputFile.type = 'file'
-    inputFileContainer.appendChild(inputFileLabel)
-    inputFileContainer.appendChild(inputFile)
-    let inputTitle = document.createElement('input')
-    inputTitle.type = 'text'
+    inputFileContainer.classList.add('inputContainer')
+
+    let acceptedText = document.createElement('p')
+    acceptedText.classList.add('acceptedText')
+    acceptedText.textContent = 'jpg, png : 4mo max'
+    
+    inputFileContainer.innerHTML += '<i class="fa-regular fa-image fa-2xl"></i>'
+    createInputFile(inputFileContainer)
+    inputFileContainer.appendChild(acceptedText)
+
+    form.classList.add('formAddWorks')
     form.appendChild(inputFileContainer)
-    form.appendChild(inputTitle)
+    createInputText(form)
+    createSelectElement(form)
     editionGalleryContent.appendChild(form)
-    // return form
+}
+
+let returnBtn
+async function createReturnButton(container) {
+    returnBtn = document.createElement('div')
+    returnBtn.id = 'return-btn'
+    returnBtn.classList.add('return-btn')
+    returnBtn.innerHTML = `<i class="fa-solid fa-arrow-left"></i>`
+    container.prepend(returnBtn)
+    returnBtn.addEventListener('click', () => {
+        console.log(datas)
+        editionGalleryContent.innerHTML = ""
+        editionGalleryContent.classList.add('gallery-modale')
+        closeModaleBtns.classList.remove('spaceBetween')
+        container.removeChild(container.firstElementChild)
+        generateGalleryContent(datas)
+    })
+    const datas = await getDatas()
 }
 
 function addWork() {
     let addWorkBtn = document.querySelector('.add-photo-btn')
     addWorkBtn.addEventListener('click', () => {
         editionGalleryContent.innerHTML = ""
-        editionGalleryContent.style.display = 'flex'
+        editionGalleryContent.classList.remove('gallery-modale')
+         createReturnButton(closeModaleBtns)
+        closeModaleBtns.classList.add('spaceBetween')
         createFormAddWord()
         let modaleTitle = document.querySelector('.modale-title')
         modaleTitle.innerText = "Ajout photo"

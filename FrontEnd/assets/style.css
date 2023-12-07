@@ -301,7 +301,9 @@ footer nav ul {
 	cursor: pointer;
 }
 
-/* ================ modale ===================*/
+/*
+	Style for gallery modale
+*/
 .modale-container {
 	position: fixed;
 	display: none;
@@ -324,6 +326,7 @@ footer nav ul {
 .close-modale-btn {
 	display: flex;
 	justify-content: flex-end;
+	align-items: center;
 }
 .close-modale-container {
 	display: flex;
@@ -348,21 +351,19 @@ footer nav ul {
 	grid-template-rows: 1fr 1fr 1fr;
 	column-gap: 9px;
 	row-gap: 30px;
+	margin-bottom: 20px;
 }
-
 .edition-gallery-img {
 	width: 100%;
 	max-width: 78px;
 }
-
 .separator {
 	width: 100%;
 	max-width: 426px;
 	height: 1px;
-	margin: 67px 0 38px 0;
+	margin: 47px 0 38px 0;
 	background-color: #B3B3B3;
 }
-
 .add-photo-btn {
 	font-size: 14px;
 	font-weight: 700;
@@ -374,7 +375,6 @@ footer nav ul {
 	background-color: #1D6154;
 	cursor: pointer;
 }
-
 .element-container {
 	position: relative;
 }
@@ -390,5 +390,58 @@ footer nav ul {
 	width: 17px;
 	height: 17px;
 	z-index: 1;
+	cursor: pointer;
+}
+
+/*
+	Style for form modale
+*/
+.formAddWorks {
+	display: flex;
+	flex-direction: column;
+}
+.inputContainer {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	width: 420px;
+	height: 169px; /* a supprimer */
+	margin-bottom: 30px;
+	color: #CBD6DC;
+	background-color: #E8F1F6;
+}
+.input-file {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	font-weight: 500;
+	width: 173px;
+	height: 36px;
+	margin-top: 13px;
+	margin-bottom: 7px;
+	border: none;
+	border-radius: 50px;
+	color: #306685;
+	background-color: #CBD6DC;
+	cursor: pointer;
+}
+.input {
+	margin-top: 10px;
+	margin-bottom: 21px;
+	width: 420px;
+	height: 51px;
+	border: none;
+	background-color: white;
+	box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.09);
+}
+.acceptedText {
+	color: black;
+	font-size: 10px;
+}
+.spaceBetween {
+	justify-content: space-between;
+}
+.return-btn {
 	cursor: pointer;
 }
