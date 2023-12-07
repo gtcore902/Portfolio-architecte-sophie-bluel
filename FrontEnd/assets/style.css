@@ -303,7 +303,7 @@ footer nav ul {
 
 /* ================ modale ===================*/
 .modale-container {
-	position: absolute;
+	position: fixed;
 	display: none;
 	justify-content: center;
 	align-items: center;
@@ -316,14 +316,10 @@ footer nav ul {
 	background-color: rgba(0, 0, 0, 0.3);
 }
 .modale-content {
-	/* display: flex;
-	flex-direction: column;
-	justify-content: center;
-	align-items: center; */
-	min-width: 630px;
+	min-width: 570px;
 	background-color: white;
 	border-radius: 10px;
-	padding: 20px;
+	padding: 26px 30px 45px 30px;
 }
 .close-modale-btn {
 	display: flex;
@@ -353,12 +349,46 @@ footer nav ul {
 	column-gap: 9px;
 	row-gap: 30px;
 }
+
 .edition-gallery-img {
 	width: 100%;
 	max-width: 78px;
 }
+
 .separator {
 	width: 100%;
+	max-width: 426px;
 	height: 1px;
+	margin: 67px 0 38px 0;
 	background-color: #B3B3B3;
+}
+
+.add-photo-btn {
+	font-size: 14px;
+	font-weight: 700;
+	color: white;
+	border: none;
+	border-radius: 60px;
+	width: 237px;
+	padding: 10px 0;
+	background-color: #1D6154;
+	cursor: pointer;
+}
+
+.element-container {
+	position: relative;
+}
+.delete-btn {
+	position: absolute;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	color: white;
+	background-color: black;
+	top: 6px;
+	right: 6px;
+	width: 17px;
+	height: 17px;
+	z-index: 1;
+	cursor: pointer;
 }
