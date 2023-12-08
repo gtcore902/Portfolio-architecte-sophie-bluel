@@ -29,6 +29,7 @@ footer, header, hgroup, menu, nav, section {
 	display: block;
 }
 body {
+	/* position: relative; */
 	line-height: 1;
 	background-color: #FFFEF8;
 }
@@ -298,5 +299,97 @@ footer nav ul {
 	font-family: 'Work Sans';
 	color: black;
 	font-size:14px;
+	cursor: pointer;
+}
+
+/*
+	Style modale display photos
+*/
+
+.wrapper-modale {
+	position: absolute;
+	visibility: hidden;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	top: 0;
+	left: 0;
+	height: 100vh;
+	width: 100vw;
+	max-width: 100%;
+	background-color: rgba(0, 0, 0, 0.3);
+}
+
+.visible {
+	visibility: visible;
+}
+#display-gallery {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	background-color: white;
+	padding: 60px 0 45px 0;
+	max-width: 630px; /* temporarily */
+	border-radius: 10px;
+}
+.closeReturn-container {
+	display: flex;
+	justify-content: flex-end;
+	padding: 0 32px;
+}
+.title-modale {
+	font-family: 'Work Sans' ;
+	color: black;
+	text-align: center;
+	font-size: 26px;
+	font-weight: 400;
+	margin-top: 10px;
+}
+.grid-photo {
+	display: grid;
+	grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+	grid-template-rows: 1fr 1fr 1fr;
+	column-gap: 9px;
+	row-gap: 30px;
+	padding: 0 105px;
+}
+.img-grid-container {
+	position: relative;
+}
+.grid-photo-img {
+	width: 100%;
+	max-width: 78px;
+}
+.icon-container {
+	position: absolute;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	padding: 3px 4px;
+	max-width: 17px;
+	max-height: 17px;
+	top: 6px;
+	right: 6px;
+	color: white;
+	background-color: black;
+	border-radius: 2px;
+}
+.separator {
+	width: 100%;
+	max-width: 426px;
+	height: 1px;
+	margin: auto;
+	background-color: #B3B3B3;
+}
+.add-photo-btn {
+	font-size: 14px;
+	font-weight: 700;
+	color: white;
+	border: none;
+	border-radius: 60px;
+	max-width: 237px;
+	margin: 38px auto 0 auto;
+	padding: 10px 50px;
+	background-color: #1D6154;
 	cursor: pointer;
 }

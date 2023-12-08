@@ -18,7 +18,7 @@ function createFigureElement(src, title) {
 let datas
 let sessionStorage = window.sessionStorage.getItem('datas')
 
-async function getDatas() {
+export async function getDatas() {
     // Check if sessionStorage datas
     if (sessionStorage) {
         datas = window.sessionStorage.getItem('datas')
@@ -46,6 +46,7 @@ async function getDatas() {
             console.error(error)
         }
     }
+    return datas
 }
 getDatas()
 

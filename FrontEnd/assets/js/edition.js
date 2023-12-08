@@ -1,3 +1,5 @@
+import { getDatas } from './main.js';
+
 // Create edition bar
 function createEditionBar() {
     let editionModeBar = document.createElement('div');
@@ -45,12 +47,39 @@ function editionModeButton() {
 }
 
 // Set modale system
-function openModal() {
+let wrapperModale = document.querySelector('.wrapper-modale')
+async function openModal() {
+    const datas = await getDatas()
     let editionSpan = document.querySelector('.span-modifier')
     editionSpan.addEventListener('click', () => {
-        // console.log('ok')
+        wrapperModale.classList.toggle('visible')
+        generateDisplayGallery()
+
     })
 }
+
+// function for generate display gallery
+async function generateDisplayGallery() {
+    const datas = await getDatas()
+    for (const element of datas) {
+        let imgGridContainer = document.createElement('div')
+        imgGridContainer.classList.add('img-grid-container')
+        let imgGridElement = document.createElement('img')
+        imgGridElement.src = element.imageUrl
+        imgGridElement.classList.add('grid-photo-img')
+        let iconContainer = document.createElement('div')
+        iconContainer.classList.add('icon-container')
+        iconContainer.innerHTML = '<i class="fa-solid fa-trash-can"></i>'
+        // console.log(imgGridElement)
+        imgGridContainer.appendChild(imgGridElement)
+        imgGridContainer.appendChild(iconContainer)
+        let gridContainer = document.querySelector('.grid-photo')
+        gridContainer.appendChild(imgGridContainer)
+    }
+}
+
+
+
 
 // Check if token exists in local storage
 if (window.sessionStorage.getItem('token')) {
