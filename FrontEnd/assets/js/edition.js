@@ -2,7 +2,9 @@ import { getDatas } from './main.js';
 import { gallery } from './main.js';
 import displayGallery from './main.js';
 
-// Create edition bar
+/**
+ * Create edition bar
+ */
 function createEditionBar() {
     let editionModeBar = document.createElement('div');
     let mainHeader = document.querySelector('.main-header')
@@ -15,7 +17,9 @@ function createEditionBar() {
     document.body.prepend(editionModeBar)
 }
 
-// Set a href button
+/**
+ * Set a href button to logout
+ */
 function setHrefButton() {
     let loginHref = document.querySelector('.login-href')
     loginHref.textContent = "logout"
@@ -25,17 +29,21 @@ function setHrefButton() {
     })
 }
 
-// Logout function
+/**
+ * Logout function
+ */
 function logout() {
     window.sessionStorage.removeItem('token')
 }
 
-// Set edition system button
+/**
+ * Set mode edition on index.html
+ */
 function editionModeButton() {
     // Display none filters buttons
     let elementContainer = document.querySelector('.filters')
     elementContainer.style.display = 'none'
-    // Create element modify
+    // Create new element to trigger
     let titleProjects = document.querySelector('.title-projects')
     titleProjects.style.marginBottom = "51px"
     let spanModifier = document.createElement('a')
@@ -54,6 +62,9 @@ let closeModaleBtns = document.querySelector('.close-modale-btn')
 let editionGalleryContent = document.querySelector('.gallery-modale')
 
 
+/**
+ * open modale on click and display gallery on modale
+ */
 async function openModal() {
     const datas = await getDatas()
     let editionSpan = document.querySelector('.link-modifier')
@@ -71,7 +82,9 @@ async function openModal() {
     })
 }
 
-// Reset gallery modal content and display none
+/**
+ * Reset gallery modal content and display none and reinit openModal()
+ */
 function resetModale() {
     resetAddWorkBtnBehavior(document.querySelector('.add-photo-btn'))
     modaleContainer.style.display = 'none'
@@ -84,10 +97,10 @@ function resetModale() {
     openModal()
 }
 
+
 function closeModale() {
     resetAddWorkBtnBehavior(document.querySelector('.add-photo-btn'))
     closeModaleBtns.classList.remove('spaceBetween')
-    
     if (returnBtn) {
         document.getElementById('return-btn').remove()
     } 

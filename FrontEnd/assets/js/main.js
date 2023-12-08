@@ -33,7 +33,10 @@ export default async function displayGallery(datas) {
     }
 }
 
-// Main function to get datas from API or sessionStorage
+/**
+ * Main function to get datas from API or sessionStorage
+ * @returns {object}
+ */
 export async function getDatas() {
         const response = await fetch('http://localhost:5678/api/works')
         // Handle error
@@ -59,7 +62,9 @@ async function launchSystem() {
 
 launchSystem()
 
-// Set filter system
+/**
+ * Set filter system display & behavior on clicks
+ */
 for (const element of objectFilterBtn) {
     element.addEventListener('click', function(event) {
         // Get the parent node
