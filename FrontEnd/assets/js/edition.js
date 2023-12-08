@@ -94,7 +94,7 @@ function closeModale() {
 }
 
 // function gallery content
-function generateGalleryContent(datas) {
+async function generateGalleryContent(datas) {
     for (let i = 0; i < datas.length; i++) {
         let contentImg = document.createElement('div')
         contentImg.classList.add('element-container')
@@ -114,7 +114,7 @@ function generateGalleryContent(datas) {
 }
 
 // Listener for delete work
-function deleteBtnClick () {
+async function deleteBtnClick () {
     let deleteBtn = document.querySelectorAll('.delete-btn')
     let workId = ""
     for (let i = 0; i < deleteBtn.length; i++) {
@@ -122,15 +122,27 @@ function deleteBtnClick () {
             // Get id of the element that was clicked
             event.target.id === "" ? workId = event.target.parentNode.id : null
             event.target.id !== "" ? workId = event.target.id : null
-            deleteWork(workId)
+            console.log('Id : ' + workId)
+            deleteWork(workId) // là problème
+            // .then(window.sessionStorage.removeItem('datas'))
+            // .then(generateGalleryContent(datas))
+        
         })
     }
 }
 
 // Function to delete element
-function deleteWork(workId) {
-    console.log('Id : ' + workId)
+async function deleteWork(workId) {
+    // console.log('Id : ' + workId)
+    const token = window.sessionStorage.getItem('token')
+    // console.log(token)
     // fetch
+    const response = await fetch(`http://localhost:5678/api/works/${workId}`, {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                }
+    }).then(console.log('hmmm...')) // ici faire quelquechose
 }
 
 
@@ -187,7 +199,7 @@ async function getCategoriesId() {
     }
 }
 
-getCategoriesId()
+// getCategoriesId()
 
 async function createSelectElement(container) {
     // Create select element
