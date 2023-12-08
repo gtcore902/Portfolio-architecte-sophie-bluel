@@ -81,18 +81,20 @@ function resetModale() {
     if (returnBtn) {
         document.getElementById('return-btn').remove()
     } 
+    openModal()
 }
 
 function closeModale() {
     resetAddWorkBtnBehavior(document.querySelector('.add-photo-btn'))
     closeModaleBtns.classList.remove('spaceBetween')
-
+    
     if (returnBtn) {
         document.getElementById('return-btn').remove()
     } 
     modaleContainer.addEventListener('click', () => resetModale())
     let closeModaleBtn = document.querySelector('.closeModal')
     closeModaleBtn.addEventListener('click', () => resetModale())
+    openModal()
 }
 
 // function gallery content
