@@ -49,9 +49,14 @@ function editionModeButton() {
 // Set modale system
 let wrapperModale = document.querySelector('.wrapper-modale')
 let displayGallery = document.getElementById('display-gallery')
+let displayForm = document.getElementById('display-form')
+
 // close display grid modale on click
 wrapperModale.addEventListener('click', () => {
     document.querySelector('.grid-photo').innerHTML = ""
+    displayForm.style.display = 'none'
+    displayGallery.style.display = 'none'
+
     wrapperModale.classList.toggle('visible')
 })
 displayGallery.addEventListener('click', (event) => {
@@ -63,6 +68,7 @@ async function openModal() {
     let editionSpan = document.querySelector('.span-modifier')
     editionSpan.addEventListener('click', () => {
         wrapperModale.classList.toggle('visible')
+        displayGallery.style.display = 'flex'
         generateDisplayGallery()
     })
 }
@@ -98,7 +104,12 @@ async function generateDisplayGallery() {
     }
 }
 
-
+// modale form system
+let triggerBtnAddPhoto = document.querySelector('.add-photo-btn')
+triggerBtnAddPhoto.addEventListener('click', () => {
+    displayForm.style.display = 'block'
+    displayGallery.style.display = 'none'
+})
 
 
 // Check if token exists in local storage

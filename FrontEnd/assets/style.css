@@ -308,8 +308,9 @@ footer nav ul {
 
 .wrapper-modale {
 	position: fixed;
-	visibility: hidden;
-	display: flex;
+	/* visibility: hidden; */
+	display: none;
+	/* display: flex; */
 	justify-content: center;
 	align-items: center;
 	top: 0;
@@ -321,10 +322,10 @@ footer nav ul {
 }
 
 .visible {
-	visibility: visible;
-}
-#display-gallery {
 	display: flex;
+}
+#display-gallery, #display-form {
+	display: none;
 	flex-direction: column;
 	justify-content: center;
 	background-color: white;
@@ -332,6 +333,9 @@ footer nav ul {
 	max-width: 630px; /* temporarily */
 	border-radius: 10px;
 }
+/* #display-form {
+	display: none;
+} */
 .closeReturn-container {
 	display: flex;
 	justify-content: flex-end;
