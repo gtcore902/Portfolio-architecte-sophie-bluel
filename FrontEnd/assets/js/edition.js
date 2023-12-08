@@ -130,6 +130,7 @@ async function removeWork(workIdToDelete) {
                      'Authorization': `Bearer ${token}`
                  }
      }).then(data => console.log(data)) // ici faire quelquechose
+    //  .then(workIdToDelete = "")
     //  .then(alert('qerg'))
     //     const response = await fetch('http://localhost:5678/api/works')
     //     datas = await response.json()
