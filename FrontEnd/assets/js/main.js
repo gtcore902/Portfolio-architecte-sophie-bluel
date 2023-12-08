@@ -1,5 +1,5 @@
 // Variables
-let gallery = document.querySelector('.gallery')
+export let gallery = document.querySelector('.gallery')
 let objectFilterBtn = document.querySelectorAll('.filter-btn')
 
 // Fetch datas from swagger API or sessionStorage
@@ -26,8 +26,8 @@ async function createFigureElement(src, title) {
  * Display gallery
  * @param {object} datas 
  */
-async function displayGallery(datas) {
-    console.log(datas)
+export default async function displayGallery(datas) {
+    // console.log(datas)
     for (let i = 0; i < datas.length; i++) {
         createFigureElement(datas[i].imageUrl, datas[i].title)
     }
@@ -51,7 +51,7 @@ export async function getDatas() {
             }
             datas = await response.json()
             // Set sessionStorage
-            window.sessionStorage.setItem('datas', JSON.stringify(datas))
+            // window.sessionStorage.setItem('datas', JSON.stringify(datas))
         } catch (error) {
             console.error(error)
         }

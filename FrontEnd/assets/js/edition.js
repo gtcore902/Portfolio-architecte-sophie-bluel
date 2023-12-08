@@ -1,4 +1,6 @@
 import { getDatas } from './main.js';
+import { gallery } from './main.js';
+import displayGallery from './main.js';
 
 // Create edition bar
 function createEditionBar() {
@@ -117,32 +119,35 @@ async function generateGalleryContent(datas) {
 let workId = ""
 async function deleteBtnClick () {
     let deleteBtn = document.querySelectorAll('.delete-btn')
-    for (let i = 0; i < deleteBtn.length; i++) {
-        deleteBtn[i].addEventListener('click', (event) => {
+    for (let element of deleteBtn) {
+        element.addEventListener('click', (event) => {
             // Get id of the element that was clicked
             event.target.id === "" ? workId = event.target.parentNode.id : null
             event.target.id !== "" ? workId = event.target.id : null
-            console.log('Id : ' + workId)
+            // console.log('Id : ' + workId)
             deleteWork(workId) // là problème
             .then(workId = "")
-            // .then(generateGalleryContent(datas))
-        
         })
     }
 }
 
 // Function to delete element
 async function deleteWork(workId) {
-    // console.log('Id : ' + workId)
     const token = window.sessionStorage.getItem('token')
-    // console.log(token)
+    let datas
     // fetch
     const response = await fetch(`http://localhost:5678/api/works/${workId}`, {
         method: 'DELETE',
         headers: { 'Content-Type': 'application/json',
                     'Authorization': `Bearer ${token}`
                 }
-    }).then(console.log('hmmm...')) // ici faire quelquechose
+    }).then(result => console.log(result)) // ici faire quelquechose
+        .then(datas = await getDatas())
+            .then(console.log(datas))
+                .then(editionGalleryContent.innerHTML = "")
+                    .then(generateGalleryContent(datas))
+                        .then(document.querySelector('.gallery').innerHTML = "")
+                            .then(displayGallery(datas))
 }
 
 
@@ -304,5 +309,5 @@ if (window.sessionStorage.getItem('token')) {
     openModal()
     closeModale()
     addWork()
-    deleteWork(workId)
+    // deleteWork(workId)
 }
