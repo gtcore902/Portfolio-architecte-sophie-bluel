@@ -307,7 +307,7 @@ footer nav ul {
 */
 
 .wrapper-modale {
-	position: absolute;
+	position: fixed;
 	visibility: hidden;
 	display: flex;
 	justify-content: center;
@@ -336,6 +336,9 @@ footer nav ul {
 	display: flex;
 	justify-content: flex-end;
 	padding: 0 32px;
+}
+.close-btn {
+	cursor: pointer;
 }
 .title-modale {
 	font-family: 'Work Sans' ;

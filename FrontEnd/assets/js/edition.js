@@ -48,15 +48,35 @@ function editionModeButton() {
 
 // Set modale system
 let wrapperModale = document.querySelector('.wrapper-modale')
+let displayGallery = document.getElementById('display-gallery')
+// close display grid modale on click
+wrapperModale.addEventListener('click', () => {
+    document.querySelector('.grid-photo').innerHTML = ""
+    wrapperModale.classList.toggle('visible')
+})
+displayGallery.addEventListener('click', (event) => {
+    event.stopPropagation()
+})
+
 async function openModal() {
     const datas = await getDatas()
     let editionSpan = document.querySelector('.span-modifier')
     editionSpan.addEventListener('click', () => {
         wrapperModale.classList.toggle('visible')
         generateDisplayGallery()
-
     })
 }
+
+// Function for close display grid modale
+function closeDisplayGridModale() {
+    let triggerBtn = document.querySelector('.close-btn')
+    triggerBtn.addEventListener('click', () => {
+        console.log('click')
+        document.querySelector('.grid-photo').innerHTML = ""
+        wrapperModale.classList.toggle('visible')
+    })
+}
+
 
 // function for generate display gallery
 async function generateDisplayGallery() {
@@ -87,4 +107,5 @@ if (window.sessionStorage.getItem('token')) {
     setHrefButton()
     editionModeButton()
     openModal()
+    closeDisplayGridModale()
 }
