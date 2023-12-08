@@ -114,9 +114,9 @@ async function generateGalleryContent(datas) {
 }
 
 // Listener for delete work
+let workId = ""
 async function deleteBtnClick () {
     let deleteBtn = document.querySelectorAll('.delete-btn')
-    let workId = ""
     for (let i = 0; i < deleteBtn.length; i++) {
         deleteBtn[i].addEventListener('click', (event) => {
             // Get id of the element that was clicked
@@ -124,7 +124,7 @@ async function deleteBtnClick () {
             event.target.id !== "" ? workId = event.target.id : null
             console.log('Id : ' + workId)
             deleteWork(workId) // là problème
-            // .then(window.sessionStorage.removeItem('datas'))
+            .then(workId = "")
             // .then(generateGalleryContent(datas))
         
         })
@@ -304,4 +304,5 @@ if (window.sessionStorage.getItem('token')) {
     openModal()
     closeModale()
     addWork()
+    deleteWork(workId)
 }
