@@ -35,11 +35,6 @@ export default async function displayGallery(datas) {
 
 // Main function to get datas from API or sessionStorage
 export async function getDatas() {
-    // Check if sessionStorage datas exists
-    if (sessionStorage) {
-        datas = window.sessionStorage.getItem('datas')
-        datas = JSON.parse(datas)
-    } else {
         const response = await fetch('http://localhost:5678/api/works')
         // Handle error
         try {
@@ -50,12 +45,9 @@ export async function getDatas() {
                 throw new Error('500, Internal servor error')
             }
             datas = await response.json()
-            // Set sessionStorage
-            // window.sessionStorage.setItem('datas', JSON.stringify(datas))
         } catch (error) {
             console.error(error)
         }
-    }
     return datas
 }
 

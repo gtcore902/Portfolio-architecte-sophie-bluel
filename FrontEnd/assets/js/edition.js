@@ -38,7 +38,6 @@ function editionModeButton() {
     // Create element modify
     let titleProjects = document.querySelector('.title-projects')
     titleProjects.style.marginBottom = "51px"
-    // console.log(titleProjects)
     let spanModifier = document.createElement('a')
     spanModifier.classList.add('link-modifier')
     spanModifier.innerHTML = `
@@ -56,8 +55,9 @@ let editionGalleryContent = document.querySelector('.gallery-modale')
 
 
 async function openModal() {
-    let editionSpan = document.querySelector('.link-modifier')
     const datas = await getDatas()
+    let editionSpan = document.querySelector('.link-modifier')
+    editionGalleryContent.innerHTML = ""
     editionSpan.addEventListener('click', () => {
         console.log(datas)
         modaleContainer.style.display = 'flex'
@@ -110,7 +110,6 @@ async function generateGalleryContent(datas) {
         contentImg.appendChild(imgTag)
         contentImg.appendChild(deleteBtn)
         editionGalleryContent.appendChild(contentImg)
-        // console.log(imgTag)
         deleteBtnClick()
     }
 }
@@ -124,30 +123,41 @@ async function deleteBtnClick () {
             // Get id of the element that was clicked
             event.target.id === "" ? workId = event.target.parentNode.id : null
             event.target.id !== "" ? workId = event.target.id : null
-            // console.log('Id : ' + workId)
-            deleteWork(workId) // là problème
+            deleteWork(workId) 
             .then(workId = "")
         })
     }
 }
 
-// Function to delete element
+/**
+ * Function to delete element
+ * @param {number} workId 
+ */
 async function deleteWork(workId) {
     const token = window.sessionStorage.getItem('token')
     let datas
     // fetch
-    const response = await fetch(`http://localhost:5678/api/works/${workId}`, {
-        method: 'DELETE',
-        headers: { 'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`
-                }
-    }).then(result => console.log(result)) // ici faire quelquechose
-        .then(datas = await getDatas())
-            .then(console.log(datas))
-                .then(editionGalleryContent.innerHTML = "")
-                    .then(generateGalleryContent(datas))
-                        .then(document.querySelector('.gallery').innerHTML = "")
-                            .then(displayGallery(datas))
+    try {
+        const response = await fetch(`http://localhost:5678/api/works/${workId}`, {
+            method: 'DELETE',
+            headers: { 'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    }
+        }).then(datas = await getDatas())
+            .then(editionGalleryContent.innerHTML = "")
+                .then(generateGalleryContent(datas))
+                    .then(gallery.innerHTML = "")
+                        .then(displayGallery(datas))
+        if (response.status === 404) {
+            throw new Error('401, Unauthorized')
+        }
+        if (response.status === 500) {
+            throw new Error('500, Internal servor error')
+        }
+            
+    } catch (error) {
+        console.log('Error: ', error)
+    }
 }
 
 
@@ -204,7 +214,6 @@ async function getCategoriesId() {
     }
 }
 
-// getCategoriesId()
 
 async function createSelectElement(container) {
     // Create select element
@@ -239,7 +248,6 @@ function createFormAddWord() {
     
     let backgroundImg = document.createElement('img')
     backgroundImg.src = '../FrontEnd/assets/icons/bcc-img-form.png'
-    // inputFileContainer.innerHTML += '<i class="fa-regular fa-image fa-2xl"></i>'
     inputFileContainer.appendChild(backgroundImg)
     createInputFile(inputFileContainer)
     inputFileContainer.appendChild(acceptedText)
@@ -301,7 +309,7 @@ function addWork() {
 
 
 
-// Check if token exists in local storage
+// Check if token exists in local storage and launch admin functions
 if (window.sessionStorage.getItem('token')) {
     createEditionBar()
     setHrefButton()
