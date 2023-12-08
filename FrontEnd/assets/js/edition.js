@@ -50,6 +50,8 @@ function editionModeButton() {
 let wrapperModale = document.querySelector('.wrapper-modale')
 let displayGallery = document.getElementById('display-gallery')
 let displayForm = document.getElementById('display-form')
+let workIdToDelete
+
 
 // close display grid modale on click
 wrapperModale.addEventListener('click', () => {
@@ -64,24 +66,29 @@ displayGallery.addEventListener('click', (event) => {
 })
 
 async function openModal() {
-    const datas = await getDatas()
+    // const datas = await getDatas()
     let editionSpan = document.querySelector('.span-modifier')
-    editionSpan.addEventListener('click', () => {
+    editionSpan.addEventListener('click', (event) => {
+        event.preventDefault()
         wrapperModale.classList.toggle('visible')
         displayGallery.style.display = 'flex'
         generateDisplayGallery()
     })
 }
+// openModal()
 
 // Function for close display grid modale
 function closeDisplayGridModale() {
     let triggerBtn = document.querySelector('.close-btn')
-    triggerBtn.addEventListener('click', () => {
+    triggerBtn.addEventListener('click', (event) => {
+        event.preventDefault()
         console.log('click')
         document.querySelector('.grid-photo').innerHTML = ""
         wrapperModale.classList.toggle('visible')
     })
 }
+// closeDisplayGridModale()
+
 
 
 // function for generate display gallery
@@ -94,23 +101,53 @@ async function generateDisplayGallery() {
         imgGridElement.src = element.imageUrl
         imgGridElement.classList.add('grid-photo-img')
         let iconContainer = document.createElement('div')
-        iconContainer.classList.add('icon-container')
-        iconContainer.innerHTML = '<i class="fa-solid fa-trash-can"></i>'
-        // console.log(imgGridElement)
+        iconContainer.classList.add('trash-icon-container')
+        iconContainer.id = element.id
+        iconContainer.innerHTML = `<i id=${element.id} class="fa-solid fa-trash-can"></i>`
         imgGridContainer.appendChild(imgGridElement)
         imgGridContainer.appendChild(iconContainer)
         let gridContainer = document.querySelector('.grid-photo')
         gridContainer.appendChild(imgGridContainer)
+
+        // add listeners for deleting work
+        iconContainer.addEventListener('click', (event) =>{
+            event.preventDefault()
+            event.target.id === "" ? workIdToDelete = event.target.parentNode.id : workIdToDelete = event.target.id
+            // console.log(workIdToDelete)
+            removeWork(workIdToDelete)
+        })
     }
+    // return
 }
 
-// modale form system
+async function removeWork(workIdToDelete) {
+     const token = window.sessionStorage.getItem('token')
+     // console.log(token)
+     // fetch
+     return fetch(`http://localhost:5678/api/works/${workIdToDelete}`, {
+         method: 'DELETE',
+         headers: { 'Content-Type': 'application/json',
+                     'Authorization': `Bearer ${token}`
+                 }
+     }).then(data => console.log(data)) // ici faire quelquechose
+    //  .then(alert('qerg'))
+    //     const response = await fetch('http://localhost:5678/api/works')
+    //     datas = await response.json()
+    //     console.log(datas)
+    //  })
+    //  .then(window.sessionStorage.removeItem('datas'))
+    //  .then(generateDisplayGallery())
+}
+
+/*
+    modale form system
+*/
 let triggerBtnAddPhoto = document.querySelector('.add-photo-btn')
-triggerBtnAddPhoto.addEventListener('click', () => {
+triggerBtnAddPhoto.addEventListener('click', (event) => {
+    event.preventDefault()
     displayForm.style.display = 'block'
     displayGallery.style.display = 'none'
 })
-
 
 // Check if token exists in local storage
 if (window.sessionStorage.getItem('token')) {
@@ -118,5 +155,8 @@ if (window.sessionStorage.getItem('token')) {
     setHrefButton()
     editionModeButton()
     openModal()
+    // generateDisplayGallery()
+    // removeWork(workIdToDelete)
     closeDisplayGridModale()
+
 }

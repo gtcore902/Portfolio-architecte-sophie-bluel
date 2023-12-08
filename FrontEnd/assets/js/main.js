@@ -20,13 +20,13 @@ let sessionStorage = window.sessionStorage.getItem('datas')
 
 export async function getDatas() {
     // Check if sessionStorage datas
-    if (sessionStorage) {
-        datas = window.sessionStorage.getItem('datas')
-        datas = JSON.parse(datas)
-        for (let i = 0; i < datas.length; i++) {
-            createFigureElement(datas[i].imageUrl, datas[i].title)
-        }
-    } else {
+    // if (sessionStorage) {
+    //     datas = window.sessionStorage.getItem('datas')
+    //     datas = JSON.parse(datas)
+    //     for (let i = 0; i < datas.length; i++) {
+    //         createFigureElement(datas[i].imageUrl, datas[i].title)
+    //     }
+    // } else {
         const response = await fetch('http://localhost:5678/api/works')
         // Handle error
         try {
@@ -45,7 +45,7 @@ export async function getDatas() {
         } catch (error) {
             console.error(error)
         }
-    }
+    // }
     return datas
 }
 getDatas()
