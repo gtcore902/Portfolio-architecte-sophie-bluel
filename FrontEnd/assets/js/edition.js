@@ -75,6 +75,7 @@ function resetModale() {
     modaleContainer.style.display = 'none'
     editionGalleryContent.innerHTML = ""
     editionGalleryContent.classList.add('gallery-modale')
+    closeModaleBtns.classList.remove('spaceBetween')
     if (returnBtn) {
         document.getElementById('return-btn').remove()
     } 
@@ -82,6 +83,8 @@ function resetModale() {
 
 function closeModale() {
     resetAddWorkBtnBehavior(document.querySelector('.add-photo-btn'))
+    closeModaleBtns.classList.remove('spaceBetween')
+
     if (returnBtn) {
         document.getElementById('return-btn').remove()
     } 
