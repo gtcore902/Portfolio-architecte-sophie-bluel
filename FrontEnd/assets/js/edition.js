@@ -71,6 +71,7 @@ async function openModal() {
 
 // Reset gallery modal content and display none
 function resetModale() {
+    resetAddWorkBtnBehavior(document.querySelector('.add-photo-btn'))
     modaleContainer.style.display = 'none'
     editionGalleryContent.innerHTML = ""
     editionGalleryContent.classList.add('gallery-modale')
@@ -80,6 +81,7 @@ function resetModale() {
 }
 
 function closeModale() {
+    resetAddWorkBtnBehavior(document.querySelector('.add-photo-btn'))
     if (returnBtn) {
         document.getElementById('return-btn').remove()
     } 
@@ -160,17 +162,49 @@ function createInputText(container) {
     container.appendChild(inputTitle)
 }
 
-function createSelectElement(container) {
+/**
+ * Fetch function to get categories from API
+ * @returns {Promise<{id: number, name: string}[]>} ids and names of categories
+ */
+async function getCategoriesId() {
+    const response = await fetch('http://localhost:5678/api/categories')
+    // Handle error
+    try {
+        if (response.status === 404) {
+            throw new Error('404, Page not found')
+        }
+        if (response.status === 500) {
+            throw new Error('500, Internal servor error')
+        }
+        let categoriesId = await response.json()
+        console.log(categoriesId)
+        return categoriesId
+    } catch (error) {
+        console.error(error)
+    }
+}
+
+getCategoriesId()
+
+async function createSelectElement(container) {
     // Create select element
     let selectElement = document.createElement('select')
     selectElement.classList.add('input')
     let selectLabel = document.createElement('label')
     selectLabel.id = 'select-category'
     selectLabel.textContent = 'Catégorie'
+    let defaultOption = document.createElement('option')
+    selectElement.appendChild(defaultOption)
     container.appendChild(selectLabel)
     container.appendChild(selectElement)
-    // set options from datas
-
+    const categoriesId = await getCategoriesId()
+    console.log(categoriesId)
+    for (const element of categoriesId) {
+        let option = document.createElement('option')
+        option.value = element.name
+        option.textContent = element.name
+        selectElement.appendChild(option)
+    }
 }
 
 let form
@@ -183,7 +217,10 @@ function createFormAddWord() {
     acceptedText.classList.add('acceptedText')
     acceptedText.textContent = 'jpg, png : 4mo max'
     
-    inputFileContainer.innerHTML += '<i class="fa-regular fa-image fa-2xl"></i>'
+    let backgroundImg = document.createElement('img')
+    backgroundImg.src = '../FrontEnd/assets/icons/bcc-img-form.png'
+    // inputFileContainer.innerHTML += '<i class="fa-regular fa-image fa-2xl"></i>'
+    inputFileContainer.appendChild(backgroundImg)
     createInputFile(inputFileContainer)
     inputFileContainer.appendChild(acceptedText)
 
@@ -208,21 +245,37 @@ async function createReturnButton(container) {
         closeModaleBtns.classList.remove('spaceBetween')
         container.removeChild(container.firstElementChild)
         generateGalleryContent(datas)
+        document.querySelector('.modale-title').textContent = "Galerie photo"
+        resetAddWorkBtnBehavior(document.querySelector('.add-photo-btn'))
+
     })
-    const datas = await getDatas()
+    const datas = await getDatas() // check if necessary !!
 }
 
+function setAddWorkBtnBehavior(element) {
+    element.textContent = "Valider"
+    element.classList.add('disabled')
+    element.disabled = true
+}
+
+function resetAddWorkBtnBehavior(element) {
+    element.textContent = "Ajouter une photo"
+    element.classList.remove('disabled')
+    element.disabled = false
+}
+
+let modaleTitle
 function addWork() {
     let addWorkBtn = document.querySelector('.add-photo-btn')
     addWorkBtn.addEventListener('click', () => {
         editionGalleryContent.innerHTML = ""
         editionGalleryContent.classList.remove('gallery-modale')
-         createReturnButton(closeModaleBtns)
+        createReturnButton(closeModaleBtns)
         closeModaleBtns.classList.add('spaceBetween')
         createFormAddWord()
-        let modaleTitle = document.querySelector('.modale-title')
+        modaleTitle = document.querySelector('.modale-title')
         modaleTitle.innerText = "Ajout photo"
-        
+        setAddWorkBtnBehavior(addWorkBtn)
     })
 }
 

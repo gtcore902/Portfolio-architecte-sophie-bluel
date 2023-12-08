@@ -445,3 +445,6 @@ footer nav ul {
 .return-btn {
 	cursor: pointer;
 }
+.disabled {
+	background-color: #A7A7A7;
+}
