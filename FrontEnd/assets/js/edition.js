@@ -427,8 +427,8 @@ function postWork(formData) {
         const response = fetch('http://localhost:5678/api/works', {
             method: 'POST',
             headers: { 
-                'Content-Type': 'application/json',
-                // 'Content-Type': 'multipart/form-data',
+                // 'Content-Type': 'application/json',
+                'Content-Type': 'multipart/form-data',
                 'Accept': 'application/json',
                 'Authorization': `Bearer ${token}`,
                     },
