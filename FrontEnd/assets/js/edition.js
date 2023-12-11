@@ -340,7 +340,7 @@ function validateInputFile(inputFile) {
         sendErrorMessage('Chargez une image', 'File')
     }
 }
-
+let img // TEST §§§§§§§§§§§§§§§§
 /**
  * Create a preview for loaded image
  * @param {object} inputFile 
@@ -350,10 +350,15 @@ function updatePreviewImg(inputFile) {
         let imgPreview = document.createElement('img')
         imgPreview.style.maxHeight = '169px'
         imgPreview.src = URL.createObjectURL(inputFile.files[0])
+        img = inputFile.files[0] // TEST §§§§§§§§§§§§§§§§
         imgPreview.alt = inputFile.files[0].name
         document.querySelector('.inputContainer').innerHTML =""
         document.querySelector('.inputContainer').appendChild(imgPreview)
-        formToSend.append('imageUrl', imgPreview.src)
+        formToSend.append('image',{
+            image: inputFile.files[0].name,
+            type: inputFile.files[0].type
+        })
+        // formToSend.append('image', inputFile.files[0])
 
 }
 
@@ -382,7 +387,7 @@ function validateInputCategory(inputCategoryValue, inputCategoryId) {
     // inputCategoryValue === '' ? sendErrorMessage('Renseignez une catégorie', 'Category') : document.getElementById('errorCategory').style.display = 'none'
     console.log(inputCategoryValue, inputCategoryId)
     if (inputCategoryValue !== '') {
-        formToSend.append('categoryId', 1)
+        formToSend.append('category', 1)
         document.getElementById('errorCategory').style.display = 'none'
         return true
     } else {
@@ -401,13 +406,23 @@ async function postWork(formToSend) {
     try {
         const response = await fetch('http://localhost:5678/api/works', {
             method: 'POST',
-            body: formToSend,
+            
+            // cache: "no-cache",
+            // credentials: "same-origin",
+            // referrerPolicy: "no-referrer",
             headers: { 
                 'Accept': 'application/json',
                 // 'Content-Type': 'application/json',
-                'Content-Type': 'application/x-www-form-urlencoded',
+                'Content-Type': 'multipart/form-data',
                 'Authorization': `Bearer ${token}`,
                     },
+            // body: {
+            //     "title": "test",
+            //     "image": img,
+            //     "category": 1
+            // },
+            body: formToSend,
+        
         })
         if (response.status === 404) {
             throw new Error('401, Unauthorized')
@@ -444,19 +459,10 @@ async function validateInputForm(form) {
         validateInputTitle(inputTitle.value)
         validateInputCategory(inputCategory.value, inputCategory.id)
         if (validateInputFile(inputFile) && validateInputTitle(inputTitle.value) && validateInputCategory(inputCategory.value)) {
-            // Here code fetch post !!
-            // let idToInsert = currentId.length + 1
-            // formToSend.append('id', idToInsert)
-            // formToSend.append('userId', 0)
-            // console.log(idToInsert)
-            // console.log(formToSend.get('title'))
-            // console.log('ok for sending form')
-            // console.log(formToSend.get('id'))
             console.log(formToSend.get('title'))
-            console.log(formToSend.get('imageUrl'))
-            console.log(formToSend.get('categoryId'))
-            // console.log(formToSend.get('userId'))
-            postWork(formToSend)
+            console.log(formToSend.get('image'))
+            console.log(formToSend.get('category'))
+            postWork(formToSend).then((error) => console.log(error))
         
         }
         })
