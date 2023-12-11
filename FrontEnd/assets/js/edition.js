@@ -256,6 +256,7 @@ async function createSelectElement(container) {
         let option = document.createElement('option')
         option.value = element.name
         option.textContent = element.name
+        option.id = element.id
         selectElement.appendChild(option)
     }
 }
@@ -333,6 +334,7 @@ function sendErrorMessage(message, id) {
 function validateInputFile(inputFile) {
     if (inputFile.value !== '') {
         document.getElementById('errorFile').style.display = 'none'
+
         return true
     } else {
         sendErrorMessage('Chargez une image', 'File')
@@ -351,6 +353,8 @@ function updatePreviewImg(inputFile) {
         imgPreview.alt = inputFile.files[0].name
         document.querySelector('.inputContainer').innerHTML =""
         document.querySelector('.inputContainer').appendChild(imgPreview)
+        formToSend.append('imageUrl', imgPreview.src)
+
 }
 
 /**
@@ -361,6 +365,7 @@ function updatePreviewImg(inputFile) {
 function validateInputTitle(inputTitleValue) {
     // inputTitleValue === '' ? sendErrorMessage('Renseignez un titre', 'Title') : document.getElementById('errorTitle').style.display = 'none'
     if (inputTitleValue !== '') {
+        formToSend.append('title', inputTitleValue)
         document.getElementById('errorTitle').style.display = 'none'
         return true
     } else if (inputTitleValue === '') {
@@ -373,9 +378,11 @@ function validateInputTitle(inputTitleValue) {
  * @param {string} inputCategoryValue 
  * @returns {boolean}
  */
-function validateInputCategory(inputCategoryValue) {
+function validateInputCategory(inputCategoryValue, inputCategoryId) {
     // inputCategoryValue === '' ? sendErrorMessage('Renseignez une catégorie', 'Category') : document.getElementById('errorCategory').style.display = 'none'
+    console.log(inputCategoryValue, inputCategoryId)
     if (inputCategoryValue !== '') {
+        formToSend.append('categoryId', 1)
         document.getElementById('errorCategory').style.display = 'none'
         return true
     } else {
@@ -385,11 +392,43 @@ function validateInputCategory(inputCategoryValue) {
 
 form = document.getElementById('formAddWork')
 
+let formToSend = new FormData()
+
+async function postWork(formToSend) {
+    // fetch
+    const token = window.sessionStorage.getItem('token')
+    let datas
+    try {
+        const response = await fetch('http://localhost:5678/api/works', {
+            method: 'POST',
+            body: formToSend,
+            headers: { 
+                'Accept': 'application/json',
+                // 'Content-Type': 'application/json',
+                'Content-Type': 'application/x-www-form-urlencoded',
+                'Authorization': `Bearer ${token}`,
+                    },
+        })
+        if (response.status === 404) {
+            throw new Error('401, Unauthorized')
+        }
+        if (response.status === 500) {
+            throw new Error('500, Internal servor error')
+        }
+            
+    } catch (error) {
+        console.log('Error: ', error)
+    }
+}
+
+
 /**
  * For validate all entries in form submitted
  * @param {object} form 
  */
-function validateInputForm(form) {
+async function validateInputForm(form) {
+    let currentId = await getDatas()
+
     let inputFile = document.getElementById('file')
     let inputTitle = document.getElementById('title')
     let inputCategory = document.getElementById('categories')
@@ -403,10 +442,22 @@ function validateInputForm(form) {
         event.preventDefault()
         validateInputFile(inputFile)
         validateInputTitle(inputTitle.value)
-        validateInputCategory(inputCategory.value)
+        validateInputCategory(inputCategory.value, inputCategory.id)
         if (validateInputFile(inputFile) && validateInputTitle(inputTitle.value) && validateInputCategory(inputCategory.value)) {
             // Here code fetch post !!
-            console.log('ok for sending form')
+            // let idToInsert = currentId.length + 1
+            // formToSend.append('id', idToInsert)
+            // formToSend.append('userId', 0)
+            // console.log(idToInsert)
+            // console.log(formToSend.get('title'))
+            // console.log('ok for sending form')
+            // console.log(formToSend.get('id'))
+            console.log(formToSend.get('title'))
+            console.log(formToSend.get('imageUrl'))
+            console.log(formToSend.get('categoryId'))
+            // console.log(formToSend.get('userId'))
+            postWork(formToSend)
+        
         }
         })
 
