@@ -396,7 +396,7 @@ footer nav ul {
 /*
 	Style for form modale
 */
-.formAddWorks {
+.formAddWork {
 	display: flex;
 	flex-direction: column;
 }

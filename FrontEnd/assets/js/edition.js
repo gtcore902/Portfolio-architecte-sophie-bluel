@@ -177,36 +177,6 @@ async function deleteWork(workId) {
 
 
 // // Function to add works
-// Create form to add work
-function createInputFile(container) {
-    // Create input type file
-    let inputFile = document.createElement('input')
-    inputFile.type = 'file'
-    inputFile.id = "file"
-    inputFile.style.display = 'none'
-    // Create label for file
-    let inputFileLabel = document.createElement('label')
-    inputFileLabel.classList.add('input-file')
-    inputFileLabel.textContent = "+ Ajouter photo"
-    inputFileLabel.setAttribute('for', 'file')
-    // add elements to DOM
-    container.appendChild(inputFileLabel)
-    container.appendChild(inputFile)
-}
-
-function createInputText(container) {
-    // Create input type text
-    let inputTitle = document.createElement('input')
-    inputTitle.type = 'text'
-    inputTitle.classList.add('input')
-    // Create label for input text
-    let inputTitleLabel = document.createElement('label')
-    inputTitleLabel.textContent = "Titre"
-    // add elements to DOM
-    container.appendChild(inputTitleLabel)
-    container.appendChild(inputTitle)
-}
-
 /**
  * Fetch function to get categories from API
  * @returns {Promise<{id: number, name: string}[]>} ids and names of categories
@@ -222,27 +192,66 @@ async function getCategoriesId() {
             throw new Error('500, Internal servor error')
         }
         let categoriesId = await response.json()
-        console.log(categoriesId)
+        // console.log(categoriesId)
         return categoriesId
     } catch (error) {
         console.error(error)
     }
 }
 
+// Create form to add work
+function createInputFile(container) {
+    // Create input type file
+    let inputFile = document.createElement('input')
+    inputFile.type = 'file'
+    inputFile.id = "file"
+    inputFile.setAttribute('name', 'file')
+    inputFile.setAttribute('accept', 'image/png, image/jpeg')
+    inputFile.style.opacity = 0 // Check here
+    // inputFile.style.display = 'none'
+    // Create label for file
+    let inputFileLabel = document.createElement('label')
+    inputFileLabel.classList.add('input-file')
+    inputFileLabel.textContent = "+ Ajouter photo"
+    inputFileLabel.setAttribute('for', 'file')
+    // add elements to DOM
+    container.appendChild(inputFileLabel)
+    container.appendChild(inputFile)
+}
+
+function createInputText(container) {
+    // Create input type text
+    let inputTitle = document.createElement('input')
+    inputTitle.type = 'text'
+    inputTitle.classList.add('input')
+    inputTitle.name = 'title'
+    inputTitle.id = 'title'
+    // Create label for input text
+    let inputTitleLabel = document.createElement('label')
+    inputTitleLabel.textContent = "Titre"
+    inputTitleLabel.setAttribute('for', 'title')
+    // add elements to DOM
+    container.appendChild(inputTitleLabel)
+    container.appendChild(inputTitle)
+}
 
 async function createSelectElement(container) {
     // Create select element
     let selectElement = document.createElement('select')
+    selectElement.name = 'categories'
+    selectElement.id = 'categories'
     selectElement.classList.add('input')
     let selectLabel = document.createElement('label')
+    selectLabel.setAttribute('for', 'categories')
     selectLabel.id = 'select-category'
     selectLabel.textContent = 'Catégorie'
     let defaultOption = document.createElement('option')
+    defaultOption.value = ''
     selectElement.appendChild(defaultOption)
     container.appendChild(selectLabel)
     container.appendChild(selectElement)
     const categoriesId = await getCategoriesId()
-    console.log(categoriesId)
+    // console.log(categoriesId)
     for (const element of categoriesId) {
         let option = document.createElement('option')
         option.value = element.name
@@ -251,28 +260,168 @@ async function createSelectElement(container) {
     }
 }
 
+function createErrorParagraph(container, id) {
+    let errorParagraph = document.createElement('div')
+    errorParagraph.id = 'error' + id
+    errorParagraph.setAttribute('aria-hidden', 'true')
+    container.appendChild(errorParagraph)
+}
+
 let form
 function createFormAddWord() {
+    // remove last button and create new submit button
+    document.querySelector('.add-photo-btn').remove()
+    let newSubmitButton = document.createElement('div')
+    newSubmitButton.id = 'newSubmitButton'
+    newSubmitButton.innerText = 'Valider'
+    newSubmitButton.classList.add('add-photo-btn') // check here
+    newSubmitButton.style.textAlign = 'center'
+    document.querySelector('.close-modale-container').appendChild(newSubmitButton)
+    // Craete form element
     form = document.createElement('form')
+    form.classList.add('formAddWork')
     let inputFileContainer = document.createElement('div')
     inputFileContainer.classList.add('inputContainer')
-
+    // Create para to display accepted files
     let acceptedText = document.createElement('p')
     acceptedText.classList.add('acceptedText')
     acceptedText.textContent = 'jpg, png : 4mo max'
-    
+    // Create img to display default icon
     let backgroundImg = document.createElement('img')
     backgroundImg.src = '../FrontEnd/assets/icons/bcc-img-form.png'
     inputFileContainer.appendChild(backgroundImg)
+    // Create input type file
     createInputFile(inputFileContainer)
     inputFileContainer.appendChild(acceptedText)
 
-    form.classList.add('formAddWorks')
+    // form.classList.add('formAddWork')
     form.appendChild(inputFileContainer)
+    // Create input type text
     createInputText(form)
+    // Create input type select
     createSelectElement(form)
+    // Insert boxes to display errors
+    createErrorParagraph(form, 'File')
+    createErrorParagraph(form, 'Title')
+    createErrorParagraph(form, 'Category')
+
     editionGalleryContent.appendChild(form)
+    validateInputForm(form)
+       
 }
+
+/**
+ * Validate form inputs
+ */
+
+/**
+ * For sending errors in form on submit
+ * @param {string} message 
+ * @param {number} id 
+ */
+function sendErrorMessage(message, id) {
+    let errorsForm = document.getElementById('error'+id)
+    errorsForm.textContent = message
+
+}
+
+/**
+ * Check if input type file exists and display error message
+ * @param {object} inputFile
+ * @returns {boolean}
+ */
+function validateInputFile(inputFile) {
+    if (inputFile.value !== '') {
+        document.getElementById('errorFile').style.display = 'none'
+        return true
+    } else {
+        sendErrorMessage('Chargez une image', 'File')
+    }
+}
+
+/**
+ * Create a preview for loaded image
+ * @param {object} inputFile 
+ */
+function updatePreviewImg(inputFile) {
+        document.getElementById('errorFile').style.display = 'none'
+        let imgPreview = document.createElement('img')
+        imgPreview.style.maxHeight = '169px'
+        imgPreview.src = URL.createObjectURL(inputFile.files[0])
+        imgPreview.alt = inputFile.files[0].name
+        document.querySelector('.inputContainer').innerHTML =""
+        document.querySelector('.inputContainer').appendChild(imgPreview)
+}
+
+/**
+ * Check if input type text exists and display error message
+ * @param {string} inputTitleValue 
+ * @returns {boolean}
+ */
+function validateInputTitle(inputTitleValue) {
+    // inputTitleValue === '' ? sendErrorMessage('Renseignez un titre', 'Title') : document.getElementById('errorTitle').style.display = 'none'
+    if (inputTitleValue !== '') {
+        document.getElementById('errorTitle').style.display = 'none'
+        return true
+    } else if (inputTitleValue === '') {
+        sendErrorMessage('Renseignez un titre', 'Title')
+    }
+}
+
+/**
+ * Check if input type select exists and display error message
+ * @param {string} inputCategoryValue 
+ * @returns {boolean}
+ */
+function validateInputCategory(inputCategoryValue) {
+    // inputCategoryValue === '' ? sendErrorMessage('Renseignez une catégorie', 'Category') : document.getElementById('errorCategory').style.display = 'none'
+    if (inputCategoryValue !== '') {
+        document.getElementById('errorCategory').style.display = 'none'
+        return true
+    } else {
+        sendErrorMessage('Renseignez une catégorie', 'Category')
+    }
+}
+
+form = document.getElementById('formAddWork')
+
+/**
+ * For validate all entries in form submitted
+ * @param {object} form 
+ */
+function validateInputForm(form) {
+    let inputFile = document.getElementById('file')
+    let inputTitle = document.getElementById('title')
+    let inputCategory = document.getElementById('categories')
+    // Listener to display preview image on change
+    inputFile.addEventListener('change', () => {
+        console.log('change')
+        updatePreviewImg(inputFile)
+    })
+    // Listener to submit form
+    document.getElementById('newSubmitButton').addEventListener('click', (event) => {
+        event.preventDefault()
+        validateInputFile(inputFile)
+        validateInputTitle(inputTitle.value)
+        validateInputCategory(inputCategory.value)
+        if (validateInputFile(inputFile) && validateInputTitle(inputTitle.value) && validateInputCategory(inputCategory.value)) {
+            // Here code fetch post !!
+            console.log('ok for sending form')
+        }
+        })
+
+}
+
+
+
+
+
+
+
+
+
+
+
 
 let returnBtn
 async function createReturnButton(container) {
@@ -298,7 +447,10 @@ async function createReturnButton(container) {
 function setAddWorkBtnBehavior(element) {
     element.textContent = "Valider"
     element.classList.add('disabled')
-    element.disabled = true
+    
+
+    // element.setAttribute('form', 'formAddWork')
+    // element.disabled = true
 }
 
 function resetAddWorkBtnBehavior(element) {
@@ -310,7 +462,8 @@ function resetAddWorkBtnBehavior(element) {
 let modaleTitle
 function addWork() {
     let addWorkBtn = document.querySelector('.add-photo-btn')
-    addWorkBtn.addEventListener('click', () => {
+    // addWorkBtn.setAttribute('type', 'submit')
+    addWorkBtn.addEventListener('click', (behaviorBtn) => {
         editionGalleryContent.innerHTML = ""
         editionGalleryContent.classList.remove('gallery-modale')
         createReturnButton(closeModaleBtns)
@@ -319,6 +472,7 @@ function addWork() {
         modaleTitle = document.querySelector('.modale-title')
         modaleTitle.innerText = "Ajout photo"
         setAddWorkBtnBehavior(addWorkBtn)
+        // validateInputForm()
     })
 }
 
@@ -333,4 +487,5 @@ if (window.sessionStorage.getItem('token')) {
     closeModale()
     addWork()
     // deleteWork(workId)
+ 
 }
