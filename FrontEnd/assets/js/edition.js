@@ -70,7 +70,7 @@ async function openModal() {
     let editionSpan = document.querySelector('.link-modifier')
     editionGalleryContent.innerHTML = ""
     editionSpan.addEventListener('click', () => {
-        console.log(datas)
+        // console.log(datas)
         modaleContainer.style.display = 'flex'
         editionGalleryContent.innerHTML = ""
 
@@ -110,7 +110,10 @@ function closeModale() {
     openModal()
 }
 
-// function gallery content
+/**
+ * function gallery content
+ * @param {object} datas 
+ */
 async function generateGalleryContent(datas) {
     for (let i = 0; i < datas.length; i++) {
         let contentImg = document.createElement('div')
@@ -139,7 +142,7 @@ async function deleteBtnClick () {
             event.target.id === "" ? workId = event.target.parentNode.id : null
             event.target.id !== "" ? workId = event.target.id : null
             deleteWork(workId) 
-            .then(workId = "")
+                .then(workId = "")
         })
     }
 }
@@ -199,14 +202,17 @@ async function getCategoriesId() {
     }
 }
 
-// Create form to add work
+/**
+ * Create input file to add file
+ * @param {object} container 
+ */
 function createInputFile(container) {
     // Create input type file
     let inputFile = document.createElement('input')
     inputFile.type = 'file'
     inputFile.id = "file"
     inputFile.setAttribute('name', 'file')
-    inputFile.setAttribute('accept', 'image/png, image/jpeg')
+    inputFile.setAttribute('accept', '.jpg, .png')
     inputFile.style.opacity = 0 // Check here
     // inputFile.style.display = 'none'
     // Create label for file
@@ -219,6 +225,10 @@ function createInputFile(container) {
     container.appendChild(inputFile)
 }
 
+/**
+ * Create input text to add title
+ * @param {object} container 
+ */
 function createInputText(container) {
     // Create input type text
     let inputTitle = document.createElement('input')
@@ -235,8 +245,12 @@ function createInputText(container) {
     container.appendChild(inputTitle)
 }
 
+/**
+ * Create select input to add category
+ * @param {object} container 
+ */
 async function createSelectElement(container) {
-    // Create select element
+    // Create & insert select element
     let selectElement = document.createElement('select')
     selectElement.name = 'categories'
     selectElement.id = 'categories'
@@ -261,6 +275,11 @@ async function createSelectElement(container) {
     }
 }
 
+/**
+ * 
+ * @param {object} container 
+ * @param {number} id 
+ */
 function createErrorParagraph(container, id) {
     let errorParagraph = document.createElement('div')
     errorParagraph.id = 'error' + id
@@ -268,16 +287,26 @@ function createErrorParagraph(container, id) {
     container.appendChild(errorParagraph)
 }
 
-let form
-function createFormAddWord() {
-    // remove last button and create new submit button
-    document.querySelector('.add-photo-btn').remove()
+/**
+ * Create new submit button
+ */
+function createSubmitButton() {
     let newSubmitButton = document.createElement('div')
     newSubmitButton.id = 'newSubmitButton'
     newSubmitButton.innerText = 'Valider'
     newSubmitButton.classList.add('add-photo-btn') // check here
     newSubmitButton.style.textAlign = 'center'
     document.querySelector('.close-modale-container').appendChild(newSubmitButton)
+}
+/**
+ * Create form element and insert inputs
+ */
+let form
+function createFormAddWork() {
+    // remove last button and create new submit button
+    document.querySelector('.add-photo-btn').remove()
+    // Insert new submit button
+    createSubmitButton()
     // Craete form element
     form = document.createElement('form')
     form.classList.add('formAddWork')
@@ -295,7 +324,6 @@ function createFormAddWord() {
     createInputFile(inputFileContainer)
     inputFileContainer.appendChild(acceptedText)
 
-    // form.classList.add('formAddWork')
     form.appendChild(inputFileContainer)
     // Create input type text
     createInputText(form)
@@ -323,7 +351,6 @@ function createFormAddWord() {
 function sendErrorMessage(message, id) {
     let errorsForm = document.getElementById('error'+id)
     errorsForm.textContent = message
-
 }
 
 /**
@@ -340,7 +367,6 @@ function validateInputFile(inputFile) {
         sendErrorMessage('Chargez une image', 'File')
     }
 }
-let img // TEST §§§§§§§§§§§§§§§§
 /**
  * Create a preview for loaded image
  * @param {object} inputFile 
@@ -350,16 +376,10 @@ function updatePreviewImg(inputFile) {
         let imgPreview = document.createElement('img')
         imgPreview.style.maxHeight = '169px'
         imgPreview.src = URL.createObjectURL(inputFile.files[0])
-        img = inputFile.files[0] // TEST §§§§§§§§§§§§§§§§
         imgPreview.alt = inputFile.files[0].name
         document.querySelector('.inputContainer').innerHTML =""
         document.querySelector('.inputContainer').appendChild(imgPreview)
-        formToSend.append('image',{
-            image: inputFile.files[0].name,
-            type: inputFile.files[0].type
-        })
-        // formToSend.append('image', inputFile.files[0])
-
+        formData.append('image', imgPreview.src)
 }
 
 /**
@@ -370,7 +390,7 @@ function updatePreviewImg(inputFile) {
 function validateInputTitle(inputTitleValue) {
     // inputTitleValue === '' ? sendErrorMessage('Renseignez un titre', 'Title') : document.getElementById('errorTitle').style.display = 'none'
     if (inputTitleValue !== '') {
-        formToSend.append('title', inputTitleValue)
+        formData.append('title', inputTitleValue)
         document.getElementById('errorTitle').style.display = 'none'
         return true
     } else if (inputTitleValue === '') {
@@ -385,9 +405,9 @@ function validateInputTitle(inputTitleValue) {
  */
 function validateInputCategory(inputCategoryValue, inputCategoryId) {
     // inputCategoryValue === '' ? sendErrorMessage('Renseignez une catégorie', 'Category') : document.getElementById('errorCategory').style.display = 'none'
-    console.log(inputCategoryValue, inputCategoryId)
+    // console.log(inputCategoryValue, inputCategoryId)
     if (inputCategoryValue !== '') {
-        formToSend.append('category', 1)
+        formData.append('category', 1) // Modify here after fix bug
         document.getElementById('errorCategory').style.display = 'none'
         return true
     } else {
@@ -397,38 +417,32 @@ function validateInputCategory(inputCategoryValue, inputCategoryId) {
 
 form = document.getElementById('formAddWork')
 
-let formToSend = new FormData()
+let formData = new FormData()
 
-async function postWork(formToSend) {
+function postWork(formData) {
     // fetch
     const token = window.sessionStorage.getItem('token')
     let datas
     try {
-        const response = await fetch('http://localhost:5678/api/works', {
+        const response = fetch('http://localhost:5678/api/works', {
             method: 'POST',
-            
-            // cache: "no-cache",
-            // credentials: "same-origin",
-            // referrerPolicy: "no-referrer",
             headers: { 
+                'Content-Type': 'application/json',
+                // 'Content-Type': 'multipart/form-data',
                 'Accept': 'application/json',
-                // 'Content-Type': 'application/json',
-                'Content-Type': 'multipart/form-data',
                 'Authorization': `Bearer ${token}`,
                     },
-            // body: {
-            //     "title": "test",
-            //     "image": img,
-            //     "category": 1
-            // },
-            body: formToSend,
+            body: formData
         
         })
+        if (response.status === 400) {
+            throw new Error('400, Mauvaise requête')
+        }
         if (response.status === 404) {
-            throw new Error('401, Unauthorized')
+            throw new Error('401, Pas autorisé')
         }
         if (response.status === 500) {
-            throw new Error('500, Internal servor error')
+            throw new Error('500, Erreur serveur')
         }
             
     } catch (error) {
@@ -442,45 +456,38 @@ async function postWork(formToSend) {
  * @param {object} form 
  */
 async function validateInputForm(form) {
-    let currentId = await getDatas()
-
     let inputFile = document.getElementById('file')
     let inputTitle = document.getElementById('title')
     let inputCategory = document.getElementById('categories')
     // Listener to display preview image on change
     inputFile.addEventListener('change', () => {
-        console.log('change')
         updatePreviewImg(inputFile)
     })
     // Listener to submit form
     document.getElementById('newSubmitButton').addEventListener('click', (event) => {
         event.preventDefault()
+        // Check input file
         validateInputFile(inputFile)
+        // Check input title
         validateInputTitle(inputTitle.value)
+        // Check input category
         validateInputCategory(inputCategory.value, inputCategory.id)
+        // If all inputs OK
         if (validateInputFile(inputFile) && validateInputTitle(inputTitle.value) && validateInputCategory(inputCategory.value)) {
-            console.log(formToSend.get('title'))
-            console.log(formToSend.get('image'))
-            console.log(formToSend.get('category'))
-            postWork(formToSend).then((error) => console.log(error))
-        
+            console.log(formData.get('image'))
+            console.log(formData.get('title'))
+            console.log(formData.get('category'))
+            postWork(formData)
         }
-        })
-
+    })
 }
 
 
-
-
-
-
-
-
-
-
-
-
 let returnBtn
+/**
+ * Create return button on modale
+ * @param {object} container 
+ */
 async function createReturnButton(container) {
     returnBtn = document.createElement('div')
     returnBtn.id = 'return-btn'
@@ -501,15 +508,19 @@ async function createReturnButton(container) {
     const datas = await getDatas() // check if necessary !!
 }
 
+/**
+ * 
+ * @param {object} element 
+ */
 function setAddWorkBtnBehavior(element) {
     element.textContent = "Valider"
     element.classList.add('disabled')
-    
-
-    // element.setAttribute('form', 'formAddWork')
-    // element.disabled = true
 }
 
+/**
+ * 
+ * @param {object} element 
+ */
 function resetAddWorkBtnBehavior(element) {
     element.textContent = "Ajouter une photo"
     element.classList.remove('disabled')
@@ -517,6 +528,9 @@ function resetAddWorkBtnBehavior(element) {
 }
 
 let modaleTitle
+/**
+ * Display form modale system
+ */
 function addWork() {
     let addWorkBtn = document.querySelector('.add-photo-btn')
     // addWorkBtn.setAttribute('type', 'submit')
@@ -525,7 +539,7 @@ function addWork() {
         editionGalleryContent.classList.remove('gallery-modale')
         createReturnButton(closeModaleBtns)
         closeModaleBtns.classList.add('spaceBetween')
-        createFormAddWord()
+        createFormAddWork()
         modaleTitle = document.querySelector('.modale-title')
         modaleTitle.innerText = "Ajout photo"
         setAddWorkBtnBehavior(addWorkBtn)
@@ -533,9 +547,9 @@ function addWork() {
     })
 }
 
-
-
-// Check if token exists in local storage and launch admin functions
+/**
+ * Check if token exists in local storage and launch admin functions
+ */
 if (window.sessionStorage.getItem('token')) {
     createEditionBar()
     setHrefButton()
@@ -544,5 +558,4 @@ if (window.sessionStorage.getItem('token')) {
     closeModale()
     addWork()
     // deleteWork(workId)
- 
 }
