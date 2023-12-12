@@ -211,7 +211,7 @@ function createInputFile(container) {
     let inputFile = document.createElement('input')
     inputFile.type = 'file'
     inputFile.id = "file"
-    inputFile.setAttribute('name', 'file')
+    inputFile.setAttribute('name', 'image')
     inputFile.setAttribute('accept', '.jpg, .png')
     inputFile.style.opacity = 0 // Check here
     // inputFile.style.display = 'none'
@@ -252,7 +252,7 @@ function createInputText(container) {
 async function createSelectElement(container) {
     // Create & insert select element
     let selectElement = document.createElement('select')
-    selectElement.name = 'categories'
+    selectElement.name = 'category'
     selectElement.id = 'categories'
     selectElement.classList.add('input')
     let selectLabel = document.createElement('label')
@@ -268,9 +268,9 @@ async function createSelectElement(container) {
     // console.log(categoriesId)
     for (const element of categoriesId) {
         let option = document.createElement('option')
-        option.value = element.name
+        option.value = element.id
         option.textContent = element.name
-        option.id = element.id
+        // option.id = element.name
         selectElement.appendChild(option)
     }
 }
@@ -291,8 +291,10 @@ function createErrorParagraph(container, id) {
  * Create new submit button
  */
 function createSubmitButton() {
-    let newSubmitButton = document.createElement('div')
+    let newSubmitButton = document.createElement('button')
     newSubmitButton.id = 'newSubmitButton'
+    newSubmitButton.setAttribute('form', 'formAddWork')
+    newSubmitButton.setAttribute('type', 'submit')
     newSubmitButton.innerText = 'Valider'
     newSubmitButton.classList.add('add-photo-btn') // check here
     newSubmitButton.style.textAlign = 'center'
@@ -309,6 +311,9 @@ function createFormAddWork() {
     createSubmitButton()
     // Craete form element
     form = document.createElement('form')
+    form.id = 'formAddWork'
+    form.setAttribute('action', '')
+    form.setAttribute('method', 'post')
     form.classList.add('formAddWork')
     let inputFileContainer = document.createElement('div')
     inputFileContainer.classList.add('inputContainer')
@@ -367,20 +372,6 @@ function validateInputFile(inputFile) {
         sendErrorMessage('Chargez une image', 'File')
     }
 }
-/**
- * Create a preview for loaded image
- * @param {object} inputFile 
- */
-function updatePreviewImg(inputFile) {
-        document.getElementById('errorFile').style.display = 'none'
-        let imgPreview = document.createElement('img')
-        imgPreview.style.maxHeight = '169px'
-        imgPreview.src = URL.createObjectURL(inputFile.files[0])
-        imgPreview.alt = inputFile.files[0].name
-        document.querySelector('.inputContainer').innerHTML =""
-        document.querySelector('.inputContainer').appendChild(imgPreview)
-        formData.append('image', imgPreview.src)
-}
 
 /**
  * Check if input type text exists and display error message
@@ -388,9 +379,8 @@ function updatePreviewImg(inputFile) {
  * @returns {boolean}
  */
 function validateInputTitle(inputTitleValue) {
-    // inputTitleValue === '' ? sendErrorMessage('Renseignez un titre', 'Title') : document.getElementById('errorTitle').style.display = 'none'
     if (inputTitleValue !== '') {
-        formData.append('title', inputTitleValue)
+        // formData.append('title', inputTitleValue.toString())
         document.getElementById('errorTitle').style.display = 'none'
         return true
     } else if (inputTitleValue === '') {
@@ -399,15 +389,28 @@ function validateInputTitle(inputTitleValue) {
 }
 
 /**
+ * Create a preview for loaded image
+ * @param {object} inputFile 
+ */
+function updatePreviewImg(inputFile) {
+    document.getElementById('errorFile').style.display = 'none'
+    let imgPreview = document.createElement('img')
+    imgPreview.style.maxHeight = '169px'
+    imgPreview.src = URL.createObjectURL(inputFile.files[0])
+    imgPreview.alt = inputFile.files[0].name
+    // document.querySelector('.inputContainer').innerHTML =""
+    document.querySelector('.inputContainer').appendChild(imgPreview)
+    // formData.append('image', inputFile.files[0])
+}
+
+/**
  * Check if input type select exists and display error message
  * @param {string} inputCategoryValue 
  * @returns {boolean}
  */
-function validateInputCategory(inputCategoryValue, inputCategoryId) {
-    // inputCategoryValue === '' ? sendErrorMessage('Renseignez une catégorie', 'Category') : document.getElementById('errorCategory').style.display = 'none'
-    // console.log(inputCategoryValue, inputCategoryId)
+function validateInputCategory(inputCategoryValue) {
     if (inputCategoryValue !== '') {
-        formData.append('category', 1) // Modify here after fix bug
+        // formData.append('category', inputCategoryValue.toString()) // Modify here after fix bug
         document.getElementById('errorCategory').style.display = 'none'
         return true
     } else {
@@ -417,8 +420,6 @@ function validateInputCategory(inputCategoryValue, inputCategoryId) {
 
 form = document.getElementById('formAddWork')
 
-let formData = new FormData()
-
 function postWork(formData) {
     // fetch
     const token = window.sessionStorage.getItem('token')
@@ -427,10 +428,10 @@ function postWork(formData) {
         const response = fetch('http://localhost:5678/api/works', {
             method: 'POST',
             headers: { 
-                // 'Content-Type': 'application/json',
-                'Content-Type': 'multipart/form-data',
-                'Accept': 'application/json',
-                'Authorization': `Bearer ${token}`,
+                // 'Content-type': 'multipart/form-data',
+                // Accept: 'application/json',
+                Authorization: `Bearer ${token}`,
+                // 'Content-type': 'application/json'
                     },
             body: formData
         
@@ -464,19 +465,23 @@ async function validateInputForm(form) {
         updatePreviewImg(inputFile)
     })
     // Listener to submit form
-    document.getElementById('newSubmitButton').addEventListener('click', (event) => {
+    form.addEventListener('submit', (event) => {
         event.preventDefault()
+        const formData = new FormData(form)
+        const data = Object.fromEntries(formData)
+        console.log(data)
+        console.log('submit')
         // Check input file
         validateInputFile(inputFile)
         // Check input title
         validateInputTitle(inputTitle.value)
         // Check input category
-        validateInputCategory(inputCategory.value, inputCategory.id)
-        // If all inputs OK
+        validateInputCategory(inputCategory.value)
+        // If all inputs = OK
         if (validateInputFile(inputFile) && validateInputTitle(inputTitle.value) && validateInputCategory(inputCategory.value)) {
-            console.log(formData.get('image'))
-            console.log(formData.get('title'))
-            console.log(formData.get('category'))
+            console.log(typeof formData.get('image'), formData.get('image'))
+            console.log(typeof formData.get('title'), formData.get('title'))
+            console.log(typeof formData.get('category'), formData.get('category'))
             postWork(formData)
         }
     })
