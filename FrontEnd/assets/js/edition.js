@@ -143,6 +143,7 @@ async function deleteBtnClick () {
             event.target.id !== "" ? workId = event.target.id : null
             deleteWork(workId) 
                 .then(workId = "")
+                    // .then(resetModale())
         })
     }
 }
@@ -438,7 +439,12 @@ function validateInputCategory(inputCategoryValue) {
 
 form = document.getElementById('formAddWork')
 
-function postWork(formData) {
+
+/**
+ * 
+ * @param {object} formData 
+ */
+async function postWork(formData) {
     // fetch
     const token = window.sessionStorage.getItem('token')
     let datas
@@ -453,7 +459,17 @@ function postWork(formData) {
                     },
             body: formData
         
-        })
+        }).then(datas = await getDatas())
+            .then(console.log(datas))
+                .then(response => console.log(response))
+                .then(editionGalleryContent.innerHTML = "")
+                .then(generateGalleryContent(datas))
+                    .then(gallery.innerHTML = "")
+                        .then(displayGallery(datas))
+
+            // .then(gallery.innerHTML = "")
+            //     .then(displayGallery(datas))
+
         if (response.status === 400) {
             throw new Error('400, Mauvaise requête')
         }
@@ -497,9 +513,6 @@ async function validateInputForm(form) {
         validateInputCategory(inputCategory.value)
         // If all inputs = OK
         if (validateInputFile(inputFile) && validateInputTitle(inputTitle.value) && validateInputCategory(inputCategory.value)) {
-            console.log(typeof formData.get('image'), formData.get('image'))
-            console.log(typeof formData.get('title'), formData.get('title'))
-            console.log(typeof formData.get('category'), formData.get('category'))
             postWork(formData)
         }
     })
