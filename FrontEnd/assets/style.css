@@ -400,7 +400,11 @@ footer nav ul {
 	display: flex;
 	flex-direction: column;
 }
+.not-visible {
+	opacity: 0;
+}
 .inputContainer {
+	position: relative;
 	display: flex;
 	flex-direction: column;
 	justify-content: center;

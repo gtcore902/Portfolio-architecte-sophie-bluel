@@ -211,6 +211,7 @@ function createInputFile(container) {
     let inputFile = document.createElement('input')
     inputFile.type = 'file'
     inputFile.id = "file"
+    inputFile.classList.add('to-hide')
     inputFile.setAttribute('name', 'image')
     inputFile.setAttribute('accept', '.jpg, .png')
     inputFile.style.opacity = 0 // Check here
@@ -218,6 +219,7 @@ function createInputFile(container) {
     // Create label for file
     let inputFileLabel = document.createElement('label')
     inputFileLabel.classList.add('input-file')
+    inputFileLabel.classList.add('to-hide')
     inputFileLabel.textContent = "+ Ajouter photo"
     inputFileLabel.setAttribute('for', 'file')
     // add elements to DOM
@@ -320,9 +322,11 @@ function createFormAddWork() {
     // Create para to display accepted files
     let acceptedText = document.createElement('p')
     acceptedText.classList.add('acceptedText')
+    acceptedText.classList.add('to-hide')
     acceptedText.textContent = 'jpg, png : 4mo max'
     // Create img to display default icon
     let backgroundImg = document.createElement('img')
+    backgroundImg.classList.add('to-hide')
     backgroundImg.src = '../FrontEnd/assets/icons/bcc-img-form.png'
     inputFileContainer.appendChild(backgroundImg)
     // Create input type file
@@ -389,12 +393,26 @@ function validateInputTitle(inputTitleValue) {
 }
 
 /**
+ * Add class to hide element to display preview image
+ * @param {object} elements 
+ */
+function hideElements(elements) {
+    for (const element of elements) {
+        element.classList.add('not-visible')
+    }
+}
+
+/**
  * Create a preview for loaded image
  * @param {object} inputFile 
  */
 function updatePreviewImg(inputFile) {
     document.getElementById('errorFile').style.display = 'none'
+    let elementToHide = document.querySelectorAll('.to-hide')
+    console.log(elementToHide)
+    hideElements(elementToHide)
     let imgPreview = document.createElement('img')
+    imgPreview.style.position = "absolute"
     imgPreview.style.maxHeight = '169px'
     imgPreview.src = URL.createObjectURL(inputFile.files[0])
     imgPreview.alt = inputFile.files[0].name
