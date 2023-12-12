@@ -26,8 +26,11 @@ async function createFigureElement(src, title) {
  * Display gallery
  * @param {object} datas 
  */
-export default async function displayGallery(datas) {
+export default async function displayMainGalleryHome(datas) {
     // console.log(datas)
+    datas = await getDatas()
+    gallery.innerHTML = ""
+    // console.log(gallery)
     for (let i = 0; i < datas.length; i++) {
         createFigureElement(datas[i].imageUrl, datas[i].title)
     }
@@ -48,6 +51,7 @@ export async function getDatas() {
                 throw new Error('500, Internal servor error')
             }
             datas = await response.json()
+            // console.log(datas)
         } catch (error) {
             console.error(error)
         }
@@ -57,7 +61,7 @@ export async function getDatas() {
 // Load and display data
 async function launchSystem() {
     await getDatas()
-    await displayGallery(datas)
+    await displayMainGalleryHome(datas)
 }
 
 launchSystem()

@@ -1,6 +1,6 @@
 import { getDatas } from './main.js';
 import { gallery } from './main.js';
-import displayGallery from './main.js';
+import displayMainGalleryHome from './main.js';
 
 /**
  * Create edition bar
@@ -75,13 +75,12 @@ async function openModal() {
         editionGalleryContent.innerHTML = ""
 
         // code gallery content
-        generateGalleryContent(datas)
+        displayGalleryEdition(datas)
     })
     modaleContent.addEventListener('click', (event) => {
         event.stopPropagation()
     })
 }
-
 /**
  * Reset gallery modal content and display none and reinit openModal()
  */
@@ -94,7 +93,7 @@ function resetModale() {
     if (returnBtn) {
         document.getElementById('return-btn').remove()
     } 
-    openModal()
+    // openModal()
 }
 
 
@@ -107,14 +106,17 @@ function closeModale() {
     modaleContainer.addEventListener('click', () => resetModale())
     let closeModaleBtn = document.querySelector('.closeModal')
     closeModaleBtn.addEventListener('click', () => resetModale())
-    openModal()
+    // openModal()
 }
 
 /**
  * function gallery content
  * @param {object} datas 
  */
-async function generateGalleryContent(datas) {
+async function displayGalleryEdition(datas) {
+    document.querySelector('.gallery-modale').innerHTML = ""
+    datas = await getDatas()
+    console.log(datas)
     for (let i = 0; i < datas.length; i++) {
         let contentImg = document.createElement('div')
         contentImg.classList.add('element-container')
@@ -128,23 +130,16 @@ async function generateGalleryContent(datas) {
         contentImg.appendChild(imgTag)
         contentImg.appendChild(deleteBtn)
         editionGalleryContent.appendChild(contentImg)
-        deleteBtnClick()
-    }
-}
-
-// Listener for delete work
-let workId = ""
-async function deleteBtnClick () {
-    let deleteBtn = document.querySelectorAll('.delete-btn')
-    for (let element of deleteBtn) {
-        element.addEventListener('click', (event) => {
+        deleteBtn.addEventListener('click', (event) => {
             // Get id of the element that was clicked
+            let workId
             event.target.id === "" ? workId = event.target.parentNode.id : null
             event.target.id !== "" ? workId = event.target.id : null
             deleteWork(workId) 
-                .then(workId = "")
-                    // .then(resetModale())
+                    .then(workId = "")
+            //         // .then(resetModale())
         })
+
     }
 }
 
@@ -156,27 +151,31 @@ async function deleteWork(workId) {
     const token = window.sessionStorage.getItem('token')
     let datas
     // fetch
-    try {
+    // try {
         const response = await fetch(`http://localhost:5678/api/works/${workId}`, {
             method: 'DELETE',
             headers: { 'Content-Type': 'application/json',
                         'Authorization': `Bearer ${token}`
                     }
-        }).then(datas = await getDatas())
-            .then(editionGalleryContent.innerHTML = "")
-                .then(generateGalleryContent(datas))
-                    .then(gallery.innerHTML = "")
-                        .then(displayGallery(datas))
-        if (response.status === 404) {
-            throw new Error('401, Unauthorized')
-        }
-        if (response.status === 500) {
-            throw new Error('500, Internal servor error')
-        }
+        }).then((data) => console.log(data))
+            .then(datas = await getDatas())
+                .then(console.log(datas))
+                        .then(await displayGalleryEdition(datas)) // ici ok
+                            .then(await displayMainGalleryHome(datas)) // problème ici
+        // if (response.status === 404) {
+        //     throw new Error('401, Unauthorized')
+        // }
+        // if (response.status === 500) {
+        //     throw new Error('500, Internal servor error')
+        // }
+        // if (response.status === 200) {
+        //     return datas
+        // }
             
-    } catch (error) {
-        console.log('Error: ', error)
-    }
+    // } catch (error) {
+    //     console.log('Error: ', error)
+    // }
+    // return datas
 }
 
 
@@ -462,13 +461,10 @@ async function postWork(formData) {
         }).then(datas = await getDatas())
             .then(console.log(datas))
                 .then(response => console.log(response))
-                .then(editionGalleryContent.innerHTML = "")
-                .then(generateGalleryContent(datas))
-                    .then(gallery.innerHTML = "")
-                        .then(displayGallery(datas))
+                        .then(displayMainGalleryHome(datas))
 
             // .then(gallery.innerHTML = "")
-            //     .then(displayGallery(datas))
+            //     .then(displayMainGalleryHome(datas))
 
         if (response.status === 400) {
             throw new Error('400, Mauvaise requête')
@@ -536,7 +532,7 @@ async function createReturnButton(container) {
         editionGalleryContent.classList.add('gallery-modale')
         closeModaleBtns.classList.remove('spaceBetween')
         container.removeChild(container.firstElementChild)
-        generateGalleryContent(datas)
+        displayGalleryEdition(datas)
         document.querySelector('.modale-title').textContent = "Galerie photo"
         resetAddWorkBtnBehavior(document.querySelector('.add-photo-btn'))
 
