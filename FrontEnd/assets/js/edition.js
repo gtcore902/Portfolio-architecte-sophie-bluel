@@ -139,8 +139,8 @@ async function displayGalleryEdition(datas) {
                     .then(workId = "")
             //         // .then(resetModale())
         })
-
     }
+    addWork()
 }
 
 /**
@@ -398,7 +398,7 @@ function validateInputTitle(inputTitleValue) {
  */
 function hideElements(elements) {
     for (const element of elements) {
-        element.classList.add('not-visible')
+        element.classList.toggle('not-visible')
     }
 }
 
@@ -416,6 +416,7 @@ function updatePreviewImg(inputFile) {
     imgPreview.style.maxHeight = '169px'
     imgPreview.src = URL.createObjectURL(inputFile.files[0])
     imgPreview.alt = inputFile.files[0].name
+    imgPreview.id = 'previewedImg'
     // document.querySelector('.inputContainer').innerHTML =""
     document.querySelector('.inputContainer').appendChild(imgPreview)
     // formData.append('image', inputFile.files[0])
@@ -462,9 +463,9 @@ async function postWork(formData) {
             .then(console.log(datas))
                 .then(response => console.log(response))
                         .then(displayMainGalleryHome(datas))
-
-            // .then(gallery.innerHTML = "")
-            //     .then(displayMainGalleryHome(datas))
+                            .then(form.reset())
+                                .then(hideElements(document.querySelectorAll('.to-hide')))
+                                    .then(document.getElementById('previewedImg').style.display = 'none')
 
         if (response.status === 400) {
             throw new Error('400, Mauvaise requête')
@@ -569,7 +570,9 @@ function addWork() {
     addWorkBtn.addEventListener('click', (behaviorBtn) => {
         editionGalleryContent.innerHTML = ""
         editionGalleryContent.classList.remove('gallery-modale')
-        createReturnButton(closeModaleBtns)
+        if (!document.getElementById('return-btn')) {
+            createReturnButton(closeModaleBtns)
+        }
         closeModaleBtns.classList.add('spaceBetween')
         createFormAddWork()
         modaleTitle = document.querySelector('.modale-title')
@@ -588,6 +591,6 @@ if (window.sessionStorage.getItem('token')) {
     editionModeButton()
     openModal()
     closeModale()
-    addWork()
+    // addWork()
     // deleteWork(workId)
 }
