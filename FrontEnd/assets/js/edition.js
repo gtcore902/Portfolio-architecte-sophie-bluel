@@ -151,8 +151,8 @@ async function deleteWork(workId) {
     const token = window.sessionStorage.getItem('token')
     let datas
     // fetch
-    // try {
-        const response = await fetch(`http://localhost:5678/api/works/${workId}`, {
+    try {
+        const response = fetch(`http://localhost:5678/api/works/${workId}`, {
             method: 'DELETE',
             headers: { 'Content-Type': 'application/json',
                         'Authorization': `Bearer ${token}`
@@ -160,18 +160,18 @@ async function deleteWork(workId) {
         }).then((data) => console.log(data))
             .then(datas = await getDatas())
                 // .then(console.log(datas))
-                        .then(await displayGalleryEdition(datas)) // ici ok
-                            .then(await displayMainGalleryHome(datas)) // problème ici
-        // if (response.status === 404) {
-        //     throw new Error('401, Unauthorized')
-        // }
-        // if (response.status === 500) {
-        //     throw new Error('500, Internal servor error')
-        // }
+                        .then(await displayGalleryEdition(datas))
+                            .then(await displayMainGalleryHome(datas))
+        if (response.status === 404) {
+            throw new Error('401, Unauthorized')
+        }
+        if (response.status === 500) {
+            throw new Error('500, Internal servor error')
+        }
             
-    // } catch (error) {
-    //     console.log('Error: ', error)
-    // }
+    } catch (error) {
+        console.log('Error: ', error)
+    }
 }
 
 
