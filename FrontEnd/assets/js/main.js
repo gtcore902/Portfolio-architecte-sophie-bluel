@@ -19,7 +19,9 @@ async function createFigureElement(src, title) {
     figcaptionElement.innerText = title
     figureElement.appendChild(imgElement)
     figureElement.appendChild(figcaptionElement)
-    gallery.appendChild(figureElement)
+    if (gallery) {
+        gallery.appendChild(figureElement)
+    }
 }
 
 /**
@@ -29,7 +31,9 @@ async function createFigureElement(src, title) {
 export default async function displayMainGalleryHome(datas) {
     // console.log(datas)
     datas = await getDatas()
-    gallery.innerHTML = ""
+    if (gallery) {
+        gallery.innerHTML = ""  
+    }
     // console.log(gallery)
     for (let i = 0; i < datas.length; i++) {
         createFigureElement(datas[i].imageUrl, datas[i].title)

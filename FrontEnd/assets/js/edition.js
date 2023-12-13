@@ -90,7 +90,7 @@ function resetModale() {
     editionGalleryContent.innerHTML = ""
     editionGalleryContent.classList.add('gallery-modale')
     closeModaleBtns.classList.remove('spaceBetween')
-    if (returnBtn) {
+    if (document.getElementById('return-btn') !== null) {
         document.getElementById('return-btn').remove()
     } 
     // openModal()
@@ -100,13 +100,13 @@ function resetModale() {
 function closeModale() {
     resetAddWorkBtnBehavior(document.querySelector('.add-photo-btn'))
     closeModaleBtns.classList.remove('spaceBetween')
-    if (returnBtn) {
-        document.getElementById('return-btn').remove()
-    } 
     modaleContainer.addEventListener('click', () => resetModale())
     let closeModaleBtn = document.querySelector('.closeModal')
     closeModaleBtn.addEventListener('click', () => resetModale())
     // openModal()
+    if (document.getElementById('return-btn') !== null) {
+        document.getElementById('return-btn').remove()
+    } 
 }
 
 /**
@@ -116,7 +116,7 @@ function closeModale() {
 async function displayGalleryEdition(datas) {
     document.querySelector('.gallery-modale').innerHTML = ""
     datas = await getDatas()
-    console.log(datas)
+    // console.log(datas)
     for (let i = 0; i < datas.length; i++) {
         let contentImg = document.createElement('div')
         contentImg.classList.add('element-container')
@@ -159,7 +159,7 @@ async function deleteWork(workId) {
                     }
         }).then((data) => console.log(data))
             .then(datas = await getDatas())
-                .then(console.log(datas))
+                // .then(console.log(datas))
                         .then(await displayGalleryEdition(datas)) // ici ok
                             .then(await displayMainGalleryHome(datas)) // problème ici
         // if (response.status === 404) {
@@ -168,14 +168,10 @@ async function deleteWork(workId) {
         // if (response.status === 500) {
         //     throw new Error('500, Internal servor error')
         // }
-        // if (response.status === 200) {
-        //     return datas
-        // }
             
     // } catch (error) {
     //     console.log('Error: ', error)
     // }
-    // return datas
 }
 
 
@@ -409,7 +405,7 @@ function hideElements(elements) {
 function updatePreviewImg(inputFile) {
     document.getElementById('errorFile').style.display = 'none'
     let elementToHide = document.querySelectorAll('.to-hide')
-    console.log(elementToHide)
+    // console.log(elementToHide)
     hideElements(elementToHide)
     let imgPreview = document.createElement('img')
     imgPreview.style.position = "absolute"
@@ -460,7 +456,7 @@ async function postWork(formData) {
             body: formData
         
         }).then(datas = await getDatas())
-            .then(console.log(datas))
+            // .then(console.log(datas))
                 .then(response => console.log(response))
                         .then(displayMainGalleryHome(datas))
                             .then(form.reset())
@@ -500,8 +496,8 @@ async function validateInputForm(form) {
         event.preventDefault()
         const formData = new FormData(form)
         const data = Object.fromEntries(formData)
-        console.log(data)
-        console.log('submit')
+        // console.log(data)
+        // console.log('submit')
         // Check input file
         validateInputFile(inputFile)
         // Check input title
@@ -528,7 +524,7 @@ async function createReturnButton(container) {
     returnBtn.innerHTML = `<i class="fa-solid fa-arrow-left"></i>`
     container.prepend(returnBtn)
     returnBtn.addEventListener('click', () => {
-        console.log(datas)
+        // console.log(datas)
         editionGalleryContent.innerHTML = ""
         editionGalleryContent.classList.add('gallery-modale')
         closeModaleBtns.classList.remove('spaceBetween')
