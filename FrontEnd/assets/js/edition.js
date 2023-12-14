@@ -180,7 +180,7 @@ async function deleteWork(workId) {
  * Fetch function to get categories from API
  * @returns {Promise<{id: number, name: string}[]>} ids and names of categories
  */
-async function getCategoriesId() {
+export async function getCategoriesId() {
     const response = await fetch("http://localhost:5678/api/categories")
     // Handle error
     try {
