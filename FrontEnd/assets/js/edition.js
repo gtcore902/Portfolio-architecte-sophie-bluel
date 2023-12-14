@@ -1,5 +1,4 @@
 import { getDatas } from "./main.js";
-// import { gallery } from "./main.js";
 import displayMainGalleryHome from "./main.js";
 
 /**
@@ -106,7 +105,6 @@ function closeModale() {
     modaleContainer.addEventListener("click", () => resetModale())
     let closeModaleBtn = document.querySelector(".closeModal")
     closeModaleBtn.addEventListener("click", () => resetModale())
-    // openModal()
     if (document.getElementById("return-btn") !== null) {
         document.getElementById("return-btn").remove()
     } 
@@ -119,7 +117,6 @@ function closeModale() {
 async function displayGalleryEdition(datas) {
     document.querySelector(".gallery-modale").innerHTML = ""
     datas = await getDatas()
-    // console.log(datas)
     for (let i = 0; i < datas.length; i++) {
         let contentImg = document.createElement("div")
         contentImg.classList.add("element-container")
@@ -140,7 +137,6 @@ async function displayGalleryEdition(datas) {
             event.target.id !== "" ? workId = event.target.id : null
             deleteWork(workId) 
                     .then(workId = "")
-            //         // .then(resetModale())
         })
     }
     addWork()
@@ -188,14 +184,10 @@ async function getCategoriesId() {
     const response = await fetch("http://localhost:5678/api/categories")
     // Handle error
     try {
-        if (response.status === 404) {
-            throw new Error("404, Page not found")
-        }
         if (response.status === 500) {
             throw new Error("500, Internal servor error")
         }
         let categoriesId = await response.json()
-        // console.log(categoriesId)
         return categoriesId
     } catch (error) {
         console.error(error)
@@ -214,8 +206,7 @@ function createInputFile(container) {
     inputFile.classList.add("to-hide")
     inputFile.setAttribute("name", "image")
     inputFile.setAttribute("accept", ".jpg, .png")
-    inputFile.style.opacity = 0 // Check here
-    // inputFile.style.display = 'none'
+    inputFile.style.opacity = 0 
     // Create label for file
     let inputFileLabel = document.createElement("label")
     inputFileLabel.classList.add("input-file")
@@ -257,22 +248,22 @@ async function createSelectElement(container) {
     selectElement.name = "category"
     selectElement.id = "categories"
     selectElement.classList.add("input")
+    // Create & insert label element
     let selectLabel = document.createElement("label")
     selectLabel.setAttribute("for", "categories")
     selectLabel.id = "select-category"
     selectLabel.textContent = "Catégorie"
+    // Create & insert option element
     let defaultOption = document.createElement("option")
     defaultOption.value = ""
     selectElement.appendChild(defaultOption)
     container.appendChild(selectLabel)
     container.appendChild(selectElement)
     const categoriesId = await getCategoriesId()
-    // console.log(categoriesId)
     for (const element of categoriesId) {
         let option = document.createElement("option")
         option.value = element.id
         option.textContent = element.name
-        // option.id = element.name
         selectElement.appendChild(option)
     }
 }
@@ -288,6 +279,7 @@ function createErrorParagraph(container, id) {
     errorParagraph.setAttribute("aria-hidden", "true")
     container.appendChild(errorParagraph)
 }
+
 
 /**
  * Create new submit button
@@ -307,7 +299,7 @@ function createSubmitButton() {
  */
 let form
 function createFormAddWork() {
-    // remove last button and create new submit button
+    // Remove last button and create new submit button
     document.querySelector(".add-photo-btn").remove()
     // Insert new submit button
     createSubmitButton()
@@ -319,7 +311,7 @@ function createFormAddWork() {
     form.classList.add("formAddWork")
     let inputFileContainer = document.createElement("div")
     inputFileContainer.classList.add("inputContainer")
-    // Create para to display accepted files
+    // Create paragraph to display accepted files
     let acceptedText = document.createElement("p")
     acceptedText.classList.add("acceptedText")
     acceptedText.classList.add("to-hide")
@@ -342,7 +334,7 @@ function createFormAddWork() {
     createErrorParagraph(form, "File")
     createErrorParagraph(form, "Title")
     createErrorParagraph(form, "Category")
-
+    // Add to DOM
     editionGalleryContent.appendChild(form)
     validateInputForm(form)
        
@@ -363,6 +355,25 @@ function sendErrorMessage(message, id) {
 }
 
 /**
+ * Create element to display confirmation message
+ * @param {object} container 
+ */
+function createSendingValidationMessage(container) {
+    let formConfirmationMessage = document.createElement("p")
+    formConfirmationMessage.id = "checked-form"
+    container.appendChild(formConfirmationMessage)
+    formConfirmationMessage.textContent = "Votre travail a bien été ajouté"
+  }
+
+/**
+ * Create function to delete confirmation message after timeout
+ */
+function deleteValidationMessage() {
+    let formConfirmationMessage = document.getElementById("checked-form")
+    formConfirmationMessage.remove()
+}
+
+/**
  * Check if input type file exists and display error message
  * @param {object} inputFile
  * @returns {boolean}
@@ -370,7 +381,6 @@ function sendErrorMessage(message, id) {
 function validateInputFile(inputFile) {
     if (inputFile.value !== "") {
         document.getElementById("errorFile").style.display = "none"
-
         return true
     } else {
         sendErrorMessage("Chargez une image", "File")
@@ -417,7 +427,6 @@ function updatePreviewImg(inputFile) {
     imgPreview.src = URL.createObjectURL(inputFile.files[0])
     imgPreview.alt = inputFile.files[0].name
     imgPreview.id = "previewedImg"
-    // document.querySelector('.inputContainer').innerHTML =""
     document.querySelector(".inputContainer").appendChild(imgPreview)
 }
 
@@ -455,12 +464,13 @@ async function postWork(formData) {
             body: formData
         
         }).then(datas = await getDatas())
-            // .then(console.log(datas))
                 .then(response => console.log(response))
                         .then(displayMainGalleryHome(datas))
                             .then(form.reset())
                                 .then(hideElements(document.querySelectorAll(".to-hide")))
                                     .then(document.getElementById("previewedImg").style.display = "none")
+                                        .then(createSendingValidationMessage(form))
+                                            .then(setTimeout(deleteValidationMessage, 5000))
 
         if (response.status === 400) {
             throw new Error("400, Bad Request")
@@ -508,7 +518,6 @@ async function validateInputForm(form) {
     })
 }
 
-
 let returnBtn
 /**
  * Create return button on modale
@@ -521,7 +530,6 @@ async function createReturnButton(container) {
     returnBtn.innerHTML = "<i class=\"fa-solid fa-arrow-left\"></i>"
     container.prepend(returnBtn)
     returnBtn.addEventListener("click", () => {
-        // console.log(datas)
         editionGalleryContent.innerHTML = ""
         editionGalleryContent.classList.add("gallery-modale")
         closeModaleBtns.classList.remove("spaceBetween")
@@ -531,7 +539,7 @@ async function createReturnButton(container) {
         resetAddWorkBtnBehavior(document.querySelector(".add-photo-btn"))
 
     })
-    const datas = await getDatas() // check if necessary !!
+    const datas = await getDatas() 
 }
 
 /**
@@ -559,7 +567,6 @@ let modaleTitle
  */
 function addWork() {
     let addWorkBtn = document.querySelector(".add-photo-btn")
-    // addWorkBtn.setAttribute('type', 'submit')
     addWorkBtn.addEventListener("click", () => {
         editionGalleryContent.innerHTML = ""
         editionGalleryContent.classList.remove("gallery-modale")
@@ -571,7 +578,6 @@ function addWork() {
         modaleTitle = document.querySelector(".modale-title")
         modaleTitle.innerText = "Ajout photo"
         setAddWorkBtnBehavior(addWorkBtn)
-        // validateInputForm()
     })
 }
 
@@ -584,6 +590,4 @@ if (window.sessionStorage.getItem("token")) {
     editionModeButton()
     openModal()
     closeModale()
-    // addWork()
-    // deleteWork(workId)
 }

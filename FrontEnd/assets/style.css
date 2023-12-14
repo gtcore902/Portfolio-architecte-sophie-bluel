@@ -462,6 +462,9 @@ footer nav ul {
 #errorFile ,#errorTitle, #errorCategory {
 	color: darkred;
 }
+#checked-form {
+	color: darkgreen;
+}
 
 /* RESPONSIVE MODAL */
 @media all and (max-width: 700px) {
