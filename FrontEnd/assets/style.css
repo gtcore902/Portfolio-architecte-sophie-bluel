@@ -462,3 +462,11 @@ footer nav ul {
 #errorFile ,#errorTitle, #errorCategory {
 	color: darkred;
 }
+
+/* RESPONSIVE MODAL */
+@media all and (max-width: 700px) {
+	.modale-content {
+		min-width: 90%;
+		max-width: 90%;
+	}
+}
