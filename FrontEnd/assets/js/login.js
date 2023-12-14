@@ -1,9 +1,9 @@
 // Handle form datas
-let inputEmail = document.getElementById('email')
-let inputPassword = document.getElementById('pass')
-let loginForm = document.querySelector('.login-form')
-let errorMessageContainer = document.querySelector('.error-message')
-let errorMessage = 'Email et/ou mot de passe invalide(s)'
+let inputEmail = document.getElementById("email")
+let inputPassword = document.getElementById("pass")
+let loginForm = document.querySelector(".login-form")
+let errorMessageContainer = document.querySelector(".error-message")
+let errorMessage = "Email et/ou mot de passe invalide(s)"
 
 
 /**
@@ -12,7 +12,7 @@ let errorMessage = 'Email et/ou mot de passe invalide(s)'
  * @returns {boolean}
  */
 function validateEmail(userMail) {
-    let regexEmail = new RegExp('[a-z0-9._-]+@[a-z0-9._-]+\\.[a-z0-9._-]+')
+    let regexEmail = new RegExp("[a-z0-9._-]+@[a-z0-9._-]+\\.[a-z0-9._-]+")
     return regexEmail.test(userMail)
 }
 
@@ -30,7 +30,7 @@ function validatePassword(userPassword) {
  * @param {string} token 
  */
 async function setToken (token) {
-    window.sessionStorage.setItem('token',token)
+    window.sessionStorage.setItem("token",token)
 }
 
 /**
@@ -39,8 +39,8 @@ async function setToken (token) {
  */
 async function sendingDatas(datas) {
     try {
-        const response = await fetch('http://localhost:5678/api/users/login', {
-        method: 'POST',
+        const response = await fetch("http://localhost:5678/api/users/login", {
+        method: "POST",
         headers: {"Content-Type": "application/json"},
         body: datas
     },
@@ -61,7 +61,7 @@ async function sendingDatas(datas) {
 /**
  * Validate datas from form and submission
  */
-loginForm.addEventListener('submit', (event) => {
+loginForm.addEventListener("submit", (event) => {
     event.preventDefault()
     let userMail = inputEmail.value
     let userPassword = inputPassword.value
@@ -74,7 +74,7 @@ loginForm.addEventListener('submit', (event) => {
         }
         sendingDatas(JSON.stringify(data))
     } else {
-        console.log('error datas form')
+        console.log("error datas form")
         errorMessageContainer.innerText = errorMessage
     }
 })
