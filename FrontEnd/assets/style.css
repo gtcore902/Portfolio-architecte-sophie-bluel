@@ -459,3 +459,6 @@ footer nav ul {
 .disabled {
 	background-color: #A7A7A7;
 }
+#errorFile ,#errorTitle, #errorCategory {
+	color: darkred;
+}

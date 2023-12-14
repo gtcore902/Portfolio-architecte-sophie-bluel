@@ -383,10 +383,12 @@ function validateInputFile(inputFile) {
  * @returns {boolean}
  */
 function validateInputTitle(inputTitleValue) {
-    if (inputTitleValue !== "") {
+    // Check if input title is empty or with only whitespace
+    let regexTitle = new RegExp("[a-z0-9._-]+")
+    if (regexTitle.test(inputTitleValue)) {
         document.getElementById("errorTitle").style.display = "none"
         return true
-    } else if (inputTitleValue === "") {
+    } else if (!regexTitle.test(inputTitleValue)) {
         sendErrorMessage("Renseignez un titre", "Title")
     }
 }
@@ -461,13 +463,13 @@ async function postWork(formData) {
                                     .then(document.getElementById("previewedImg").style.display = "none")
 
         if (response.status === 400) {
-            throw new Error("400, Mauvaise requête")
+            throw new Error("400, Bad Request")
         }
         if (response.status === 404) {
-            throw new Error("401, Pas autorisé")
+            throw new Error("401, Unauthorized")
         }
         if (response.status === 500) {
-            throw new Error("500, Erreur serveur")
+            throw new Error("500, Internal server error")
         }
             
     } catch (error) {
