@@ -167,7 +167,11 @@ li:hover {
 	grid-column-gap: 20px;
 	grid-row-gap: 20px;
 }
-
+figure {
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}
 .gallery img {
 	width: 100%;
 
@@ -377,6 +381,9 @@ footer nav ul {
 }
 .element-container {
 	position: relative;
+	display: flex;
+	justify-content: center;
+	align-items: center;
 }
 .delete-btn {
 	position: absolute;
