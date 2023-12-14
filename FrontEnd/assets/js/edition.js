@@ -82,7 +82,7 @@ async function openModal() {
     })
 }
 /**
- * Reset gallery modal content and display none and reinit openModal()
+ * Reset gallery modal content and display none and reinit
  */
 function resetModale() {
     resetAddWorkBtnBehavior(document.querySelector('.add-photo-btn'))
@@ -93,10 +93,13 @@ function resetModale() {
     if (document.getElementById('return-btn') !== null) {
         document.getElementById('return-btn').remove()
     } 
+    modaleContainer.setAttribute('aria-hidden', 'true')
     // openModal()
 }
 
-
+/**
+ * Listeners for reset modale
+ */
 function closeModale() {
     resetAddWorkBtnBehavior(document.querySelector('.add-photo-btn'))
     closeModaleBtns.classList.remove('spaceBetween')
@@ -141,6 +144,7 @@ async function displayGalleryEdition(datas) {
         })
     }
     addWork()
+    modaleContainer.setAttribute('aria-hidden', 'false')
 }
 
 /**
@@ -380,7 +384,6 @@ function validateInputFile(inputFile) {
  */
 function validateInputTitle(inputTitleValue) {
     if (inputTitleValue !== '') {
-        // formData.append('title', inputTitleValue.toString())
         document.getElementById('errorTitle').style.display = 'none'
         return true
     } else if (inputTitleValue === '') {
@@ -405,7 +408,6 @@ function hideElements(elements) {
 function updatePreviewImg(inputFile) {
     document.getElementById('errorFile').style.display = 'none'
     let elementToHide = document.querySelectorAll('.to-hide')
-    // console.log(elementToHide)
     hideElements(elementToHide)
     let imgPreview = document.createElement('img')
     imgPreview.style.position = "absolute"
@@ -415,7 +417,6 @@ function updatePreviewImg(inputFile) {
     imgPreview.id = 'previewedImg'
     // document.querySelector('.inputContainer').innerHTML =""
     document.querySelector('.inputContainer').appendChild(imgPreview)
-    // formData.append('image', inputFile.files[0])
 }
 
 /**
@@ -425,7 +426,6 @@ function updatePreviewImg(inputFile) {
  */
 function validateInputCategory(inputCategoryValue) {
     if (inputCategoryValue !== '') {
-        // formData.append('category', inputCategoryValue.toString()) // Modify here after fix bug
         document.getElementById('errorCategory').style.display = 'none'
         return true
     } else {
@@ -448,10 +448,7 @@ async function postWork(formData) {
         const response = fetch('http://localhost:5678/api/works', {
             method: 'POST',
             headers: { 
-                // 'Content-type': 'multipart/form-data',
-                // Accept: 'application/json',
                 Authorization: `Bearer ${token}`,
-                // 'Content-type': 'application/json'
                     },
             body: formData
         
@@ -496,8 +493,6 @@ async function validateInputForm(form) {
         event.preventDefault()
         const formData = new FormData(form)
         const data = Object.fromEntries(formData)
-        // console.log(data)
-        // console.log('submit')
         // Check input file
         validateInputFile(inputFile)
         // Check input title
