@@ -368,7 +368,9 @@ function createSendingValidationMessage(container) {
  */
 function deleteValidationMessage() {
     let formConfirmationMessage = document.getElementById("checked-form")
-    formConfirmationMessage.remove()
+    if (formConfirmationMessage !== null) {
+        formConfirmationMessage.remove()
+    }
 }
 
 /**
@@ -390,10 +392,11 @@ function validateInputFile(inputFile) {
  * Add class to hide element to display preview image
  * @param {object} elements 
  */
-function hideElements(elements) {
+function hideElements(elements, imgPreview) {
     for (const element of elements) {
         element.classList.toggle("not-visible")
     }
+    imgPreview.remove()
 }
 
 /**
@@ -403,13 +406,13 @@ function hideElements(elements) {
 function updatePreviewImg(inputFile) {
     document.getElementById("errorFile").style.display = "none"
     let elementToHide = document.querySelectorAll(".to-hide")
-    hideElements(elementToHide)
     let imgPreview = document.createElement("img")
     imgPreview.style.position = "absolute"
     imgPreview.style.maxHeight = "169px"
     imgPreview.src = URL.createObjectURL(inputFile.files[0])
     imgPreview.alt = inputFile.files[0].name
     imgPreview.id = "previewedImg"
+    hideElements(elementToHide, imgPreview)
     document.querySelector(".inputContainer").appendChild(imgPreview)
 }
 
@@ -420,7 +423,7 @@ function updatePreviewImg(inputFile) {
  */
 function validateInputTitle(inputTitleValue) {
     // Check if input title is empty or with only whitespace
-    let regexTitle = new RegExp("[a-z0-9._-]+")
+    let regexTitle = new RegExp("[a-zA-Z0-9._-]+")
     if (regexTitle.test(inputTitleValue)) {
         document.getElementById("errorTitle").style.display = "none"
         return true
@@ -466,8 +469,8 @@ async function postWork(formData) {
         }).then(datas = await getDatas())
             .then(response => console.log(response))
                 .then(displayMainGalleryHome(datas))
-                    .then(hideElements(document.querySelectorAll(".to-hide")))
-                        .then(document.getElementById("previewedImg").style.display = "none")
+                    .then(hideElements(document.querySelectorAll(".to-hide"), document.getElementById("previewedImg")))
+                        // .then(document.getElementById("previewedImg").style.display = "none")
                             .then(createSendingValidationMessage(form))
                                 .then(setTimeout(deleteValidationMessage, 5000))
                                     .then(form.reset())
