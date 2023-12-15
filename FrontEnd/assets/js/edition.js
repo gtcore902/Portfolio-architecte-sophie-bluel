@@ -69,10 +69,8 @@ async function openModal() {
     let editionSpan = document.querySelector(".link-modifier")
     editionGalleryContent.innerHTML = ""
     editionSpan.addEventListener("click", () => {
-        // console.log(datas)
         modaleContainer.style.display = "flex"
         editionGalleryContent.innerHTML = ""
-
         // code gallery content
         displayGalleryEdition(datas)
     })
@@ -93,7 +91,6 @@ function resetModale() {
         document.getElementById("return-btn").remove()
     } 
     modaleContainer.setAttribute("aria-hidden", "true")
-    // openModal()
 }
 
 /**
@@ -290,7 +287,8 @@ function createSubmitButton() {
     newSubmitButton.setAttribute("form", "formAddWork")
     newSubmitButton.setAttribute("type", "submit")
     newSubmitButton.innerText = "Valider"
-    newSubmitButton.classList.add("add-photo-btn") // check here
+    newSubmitButton.classList.add("add-photo-btn")
+    newSubmitButton.classList.add("disabled")
     newSubmitButton.style.textAlign = "center"
     document.querySelector(".close-modale-container").appendChild(newSubmitButton)
 }
@@ -383,23 +381,8 @@ function validateInputFile(inputFile) {
         document.getElementById("errorFile").style.display = "none"
         return true
     } else {
+        document.getElementById("errorFile").style.display = "block"
         sendErrorMessage("Chargez une image", "File")
-    }
-}
-
-/**
- * Check if input type text exists and display error message
- * @param {string} inputTitleValue 
- * @returns {boolean}
- */
-function validateInputTitle(inputTitleValue) {
-    // Check if input title is empty or with only whitespace
-    let regexTitle = new RegExp("[a-z0-9._-]+")
-    if (regexTitle.test(inputTitleValue)) {
-        document.getElementById("errorTitle").style.display = "none"
-        return true
-    } else if (!regexTitle.test(inputTitleValue)) {
-        sendErrorMessage("Renseignez un titre", "Title")
     }
 }
 
@@ -431,6 +414,23 @@ function updatePreviewImg(inputFile) {
 }
 
 /**
+ * Check if input type text exists and display error message
+ * @param {string} inputTitleValue 
+ * @returns {boolean}
+ */
+function validateInputTitle(inputTitleValue) {
+    // Check if input title is empty or with only whitespace
+    let regexTitle = new RegExp("[a-z0-9._-]+")
+    if (regexTitle.test(inputTitleValue)) {
+        document.getElementById("errorTitle").style.display = "none"
+        return true
+    } else if (!regexTitle.test(inputTitleValue)) {
+        document.getElementById("errorTitle").style.display = "block"
+        sendErrorMessage("Renseignez un titre", "Title")
+    }
+}
+
+/**
  * Check if input type select exists and display error message
  * @param {string} inputCategoryValue 
  * @returns {boolean}
@@ -440,12 +440,12 @@ function validateInputCategory(inputCategoryValue) {
         document.getElementById("errorCategory").style.display = "none"
         return true
     } else {
+        document.getElementById("errorCategory").style.display = "block"
         sendErrorMessage("Renseignez une catégorie", "Category")
     }
 }
 
 form = document.getElementById("formAddWork")
-
 
 /**
  * 
@@ -464,13 +464,13 @@ async function postWork(formData) {
             body: formData
         
         }).then(datas = await getDatas())
-                .then(response => console.log(response))
-                        .then(displayMainGalleryHome(datas))
-                            .then(form.reset())
-                                .then(hideElements(document.querySelectorAll(".to-hide")))
-                                    .then(document.getElementById("previewedImg").style.display = "none")
-                                        .then(createSendingValidationMessage(form))
-                                            .then(setTimeout(deleteValidationMessage, 5000))
+            .then(response => console.log(response))
+                .then(displayMainGalleryHome(datas))
+                    .then(hideElements(document.querySelectorAll(".to-hide")))
+                        .then(document.getElementById("previewedImg").style.display = "none")
+                            .then(createSendingValidationMessage(form))
+                                .then(setTimeout(deleteValidationMessage, 5000))
+                                    .then(form.reset())
 
         if (response.status === 400) {
             throw new Error("400, Bad Request")
@@ -487,7 +487,6 @@ async function postWork(formData) {
     }
 }
 
-
 /**
  * For validate all entries in form submitted
  * @param {object} form 
@@ -496,10 +495,15 @@ async function validateInputForm(form) {
     let inputFile = document.getElementById("file")
     let inputTitle = document.getElementById("title")
     let inputCategory = document.getElementById("categories")
+    let inputsArray = [inputFile, inputTitle, inputCategory]
     // Listener to display preview image on change
     inputFile.addEventListener("change", () => {
         updatePreviewImg(inputFile)
     })
+    // Set class for submit button on change
+    inputsArray.map((element) => element.addEventListener("change", () => {
+        document.querySelector(".add-photo-btn").classList.remove("disabled")
+    }))
     // Listener to submit form
     form.addEventListener("submit", (event) => {
         event.preventDefault()

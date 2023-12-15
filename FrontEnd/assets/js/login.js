@@ -3,7 +3,7 @@ let inputEmail = document.getElementById("email")
 let inputPassword = document.getElementById("pass")
 let loginForm = document.querySelector(".login-form")
 let errorMessageContainer = document.querySelector(".error-message")
-let errorMessage = "Email et/ou mot de passe invalide(s)"
+let errorMessage = "Erreur dans l’identifiant ou le mot de passe"
 
 
 /**
@@ -48,8 +48,13 @@ async function sendingDatas(datas) {
     const result = await response.json()
     if (!response.ok) {
         errorMessageContainer.innerText = errorMessage
-        throw new Error("Erreur de traitement fetch")
-    } else {
+    }
+    if (response.status === 401) {
+        throw new Error("Not Authorized")
+    } 
+    if (response.status === 404) {
+        throw new Error("User not found")
+    }  else {
         setToken(result.token)
             .then(window.location.href = "./index.html")
     }
@@ -74,7 +79,6 @@ loginForm.addEventListener("submit", (event) => {
         }
         sendingDatas(JSON.stringify(data))
     } else {
-        console.log("error datas form")
         errorMessageContainer.innerText = errorMessage
     }
 })
